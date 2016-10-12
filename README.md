@@ -8,7 +8,7 @@ or use `rnpm` instead:
 `rnpm link react-native-mind`
 `rnpm link react-native-svg`
 ##preview
-![image](./raw/master/demo.png)
+![image](./demo.png)
 ##Usage
 ```javascript
 import React, { Component } from 'react';
