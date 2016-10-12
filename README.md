@@ -1,14 +1,20 @@
 ##Installation
 1.Install library from npm
+
 `npm install react-native-mind --save`
+
 2.Link native code
+
 `react-native link react-native-mind`
 `react-native link react-native-svg`
+
 or use `rnpm` instead:
+
 `rnpm link react-native-mind`
 `rnpm link react-native-svg`
+
 ##preview
-![image](./demo.png)
+    ![image](./demo.png)
 ##Usage
 ```javascript
 import React, { Component } from 'react';
