@@ -6,11 +6,13 @@
 2.Link native code
 
 `react-native link react-native-mind`
+
 `react-native link react-native-svg`
 
 or use `rnpm` instead:
 
 `rnpm link react-native-mind`
+
 `rnpm link react-native-svg`
 
 ##preview
