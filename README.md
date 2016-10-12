@@ -14,7 +14,7 @@ or use `rnpm` instead:
 `rnpm link react-native-svg`
 
 ##preview
-    ![image](./demo.png)
+![image](./demo.png)
 ##Usage
 ```javascript
 import React, { Component } from 'react';
