@@ -165,11 +165,16 @@ class NodeTree {
 
                 node.point.y=-node.parent.maxHeight/2+node.parent.point.y+node.parent.shape.height/2+nodeStyle.blankBottom/2;
 
+                if(node.index==0&&node.children.length>1){
+                    node.point.y=node.parent.point.y+node.parent.shape.height/2-node.shape.height/2;
+                }
+
                 //计算大于第二例的位置
                 if(node.index>0){
                     node.point.y+=node.parent.point.childOffsetY+dy;
                     dy*=2;
                 }
+
 
                 //记录偏移
                 node.parent.point.childOffsetY+=node.shape.height+dy+nodeStyle.blankBottom;

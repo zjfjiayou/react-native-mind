@@ -20,7 +20,7 @@ class Collection extends Component {
             nodeTree:new NodeTree(this.props.nodeTree.root)
         }
 
-        emitter.on('collection.redraw',()=>{
+        emitter.once('collection.redraw',()=>{
             this.setState({
                 ready:true
             });

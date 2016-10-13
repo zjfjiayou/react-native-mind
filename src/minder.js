@@ -49,6 +49,10 @@ class Minder extends Component {
 
     render() {
 
+        if(!this.props.dataList||!this.props.dataList.length){
+            return <Svg />
+        }
+
         const pageContent = this.props.dataList.map(nodeTree=>{
             return <Collection nodeTree={nodeTree} key={nodeTree.root.data.id}></Collection>
         });
