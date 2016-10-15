@@ -12,9 +12,10 @@ class Node {
         this.parent = null;
         this.root = this;
         this.children = [];
-        this.point=new Point(0,0,0,0);
-        this.titleBox=new Box(0,0);
-        this.contentBox=new Box(0,0);
+        this.point = new Point(0, 0, 0, 0);
+        this.titleBox = new Box(0, 0);
+        this.contentBox = new Box(0, 0);
+        this.area = new Box(0, 0);
 
         // 数据
         this.data = {
@@ -56,55 +57,58 @@ class Node {
         return level;
     }
 
-    get maxHeight(){
-        var children = this.getChildren();
-        var h=0;
-        for (var i = 0; i < children.length; i++) {
-            h+=children[i].calcMaxHeight();
-        }
-        return h;
-    }
-
-    get style(){
+    get style() {
         let style;
-        switch(this.data.type){
+        switch (this.data.type) {
             case 1:
-                style=nodeStyle.image;
+                style = nodeStyle.image;
                 break;
             case 2:
-                style=nodeStyle.file;
+                style = nodeStyle.file;
                 break;
             case 3:
-                style=nodeStyle.content;
+                style = nodeStyle.content;
                 break;
             default:
-                style=nodeStyle.text;
+                style = nodeStyle.text;
                 break;
         }
         return style;
     }
 
-    get shape(){
-        let box = new Box(0,0);
-        box.width=Math.max(this.titleBox.width,this.contentBox.width);
-        box.height=this.titleBox.height+this.contentBox.height;
+    get shape() {
+        let box = new Box(0, 0);
+        box.width = Math.max(this.titleBox.width, this.contentBox.width);
+        box.height = this.titleBox.height + this.contentBox.height;
         return box;
     }
 
-    calcMaxHeight(){
-        var children = this.getChildren();
-
-        var _h=0;
-        for (var i = 0; i < children.length; i++) {
-            _h+=this.children[i].calcMaxHeight();
-        }
-
-        return Math.max(this.shape.height+nodeStyle.blankBottom,_h);
-    }
 
     isRoot() {
         return this.root === this;
     }
+
+    /**
+     * 判断节点是否叶子
+     */
+    isLeaf() {
+        return this.children.length === 0;
+    }
+
+    /**
+     * 判断节点是初始
+     */
+    isFirst() {
+        return this.index === 0;
+    }
+
+    /**
+     * 判断节点是最后一个节点
+     */
+    isLast() {
+        return this.index === this.parent.children.length;
+    }
+
     /**
      * 先序遍历当前节点树
      * @param  {Function} fn 遍历函数
@@ -142,7 +146,7 @@ class Node {
         // }
         node.parent = this;
         node.root = this.root;
-        node.index=index;
+        node.index = index;
 
         this.children.splice(index, 0, node);
     }

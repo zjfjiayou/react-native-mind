@@ -1,22 +1,22 @@
-import {NativeModules} from 'react-native'
-import {emitter} from './utils'
+import {
+    NativeModules
+} from 'react-native'
+import {
+    emitter
+} from './utils'
 import Node from './node'
 import nodeStyle from '../style/node.style'
 
 
 //获取文字宽度
-const testLength=NativeModules.Testlength;
+const testLength = NativeModules.Testlength;
 //切分文字
-const splitText=NativeModules.splitTextByWidth;
-
-// splitText.processString('1213你你你a',{font:'Heiti SC',fontSize:14},{width:28,height:50},(error,textList)=>{
-//     console.log(textList)
-// })
+const splitText = NativeModules.splitTextByWidth;
 
 class NodeTree {
     constructor(nodeData) {
         this._root = this.createNode(nodeData, null);
-        this.importNode(this._root,nodeData);
+        this.importNode(this._root, nodeData);
 
         //计算节点大小和位置
         this.calcPosition();
@@ -35,7 +35,7 @@ class NodeTree {
     }
 
     //递归导入节点数据
-    importNode(node,json) {
+    importNode(node, json) {
         var data = json.data;
         node.data = {};
 
@@ -64,12 +64,12 @@ class NodeTree {
     }
 
     //计算节点位置
-    calcPosition(){
+    calcPosition() {
 
-        let promiseList=[];
+        let promiseList = [];
 
         //计算标题所占长度与高度
-        this.allNode.forEach(node=>{
+        this.allNode.forEach(node => {
             let p = new Promise((resolve, reject) => {
                 testLength.processString(node.data.text, {
                         font: 'Heiti SC',
@@ -86,11 +86,9 @@ class NodeTree {
             });
 
             promiseList.push(p);
-        });
 
-        //切分文件标题
-        this.allNode.forEach(node=>{
-            if (node.data.type===2){
+            //切分文件标题
+            if (node.data.type === 2) {
                 let p = new Promise((resolve, reject) => {
                     splitText.processString(node.data.content[0].name, {
                         font: 'Heiti SC',
@@ -99,17 +97,15 @@ class NodeTree {
                         width: node.style.text.width,
                         height: 50
                     }, (error, textList) => {
-                        node.data.fileNameList=textList
+                        node.data.fileNameList = textList
                         resolve();
                     });
                 });
                 promiseList.push(p);
             }
-        });
 
-        //切分正文
-        this.allNode.forEach(node=>{
-            if (node.data.type===3){
+            //切分正文
+            if (node.data.type === 3) {
                 let p = new Promise((resolve, reject) => {
                     splitText.processString(node.data.content, {
                         font: 'Heiti SC',
@@ -118,7 +114,9 @@ class NodeTree {
                         width: node.style.text.width,
                         height: 50
                     }, (error, textList) => {
-                        node.data.contentList=textList.filter((item)=>{return item!=''});
+                        node.data.contentList = textList.filter((item) => {
+                            return item != ''
+                        });
                         resolve();
                     });
                 });
@@ -126,58 +124,64 @@ class NodeTree {
             }
         });
 
-        Promise.all(promiseList).then(()=>{
+        Promise.all(promiseList).then(() => {
 
             //计算内容所占大小
-            this.allNode.forEach(node=>{
-                let style=node.style;
-                switch(node.data.type){
+            this.allNode.forEach(node => {
+                let style = node.style;
+                switch (node.data.type) {
                     case 1:
-                        node.contentBox.width=((node.data.content?node.data.content.length:0)+1)*(style.content.singleWidth+style.content.marginLeft)-style.content.marginLeft+style.content.paddingLeft+style.content.paddingRight+2*style.content.x;
-                        node.contentBox.height=style.content.singleHeight+style.content.paddingTop+style.content.paddingBottom+style.content.y;
+                        node.contentBox.width = ((node.data.content ? node.data.content.length : 0) + 1) * (style.content.singleWidth + style.content.marginLeft) - style.content.marginLeft + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
+                        node.contentBox.height = style.content.singleHeight + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;
                     case 2:
-                        node.contentBox.width=style.content.singleWidth+style.content.paddingLeft+style.content.paddingRight+2*style.content.x;
-                        node.contentBox.height=style.content.singleHeight+style.content.paddingTop+style.content.paddingBottom+style.content.y;
+                        node.contentBox.width = style.content.singleWidth + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
+                        node.contentBox.height = style.content.singleHeight + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;
                     case 3:
-                        node.contentBox.width=style.content.singleWidth+style.content.paddingLeft+style.content.paddingRight+2*style.content.x;
-                        node.contentBox.height=style.content.singleHeight*node.data.contentList.length+style.content.paddingTop+style.content.paddingBottom+style.content.y;
+                        node.contentBox.width = style.content.singleWidth + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
+                        node.contentBox.height = style.content.singleHeight * node.data.contentList.length + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;
                 }
             });
 
-            //计算节点Y轴偏移位置
-            this.allNode.forEach((node,index)=>{
+            //计算节点所占区域大小
+            this.root.postTraverse((node)=>{
+
+                node.area.width=node.shape.width;
+
                 if(node.isRoot()){
                     return
                 }
 
-                const childrenMaxHeight=node.maxHeight;
-
-                var dy=0;
-
-                if(childrenMaxHeight){
-                    if(node.shape.height<childrenMaxHeight){
-                        dy=(childrenMaxHeight-node.shape.height)/2;
+                if(node.isLeaf()){
+                    node.parent.area.height+=node.shape.height;
+                    node.area.height=node.shape.height;
+                    if(!node.isLast()){
+                        node.parent.area.height+=nodeStyle.blankBottom;
+                        node.area.height+=nodeStyle.blankBottom;
                     }
+                }else{
+                    node.parent.area.height+=node.area.height;
                 }
 
-                node.point.y=-node.parent.maxHeight/2+node.parent.point.y+node.parent.shape.height/2+nodeStyle.blankBottom/2;
+            });
 
-                if(node.index==0&&node.children.length>1){
-                    node.point.y=node.parent.point.y+node.parent.shape.height/2-node.shape.height/2;
+            //计算节点Y轴偏移位置
+            this.allNode.forEach((node,index)=>{
+
+                if(node.isRoot()){
+                    return
                 }
 
-                //计算大于第二例的位置
-                if(node.index>0){
-                    node.point.y+=node.parent.point.childOffsetY+dy;
-                    dy*=2;
-                }
-
+                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+(node.area.height-node.shape.height)/2+node.parent.point.y+node.parent.point.childOffsetY
 
                 //记录偏移
-                node.parent.point.childOffsetY+=node.shape.height+dy+nodeStyle.blankBottom;
+                if(node.isLeaf()){
+                    node.parent.point.childOffsetY+=node.shape.height+nodeStyle.blankBottom;
+                }else{
+                    node.parent.point.childOffsetY+=node.area.height;
+                }
                 node.point.x=node.parent.point.offsetX+node.parent.shape.width+nodeStyle.blankLeft;
                 node.point.offsetX=node.point.x;
             });
