@@ -6,7 +6,7 @@ import nodeStyle from '../style/node.style'
 
 
 class Node {
-    constructor() {
+    constructor(data) {
 
         // 指针
         this.parent = null;
@@ -18,10 +18,11 @@ class Node {
         this.area = new Box(0, 0);
 
         // 数据
-        this.data = {
-            id: utils.guid(),
-            created: +new Date()
-        };
+        // this.data = {
+        //     id: utils.guid(),
+        //     created: +new Date()
+        // };
+        this.data=data;
 
     }
 
@@ -57,20 +58,24 @@ class Node {
         return level;
     }
 
+    get serializeContent(){
+        return JSON.parse(this.data.content);
+    }
+
     get style() {
         let style;
-        switch (this.data.type) {
-            case 1:
+        switch (this.data.content_type) {
+            case 'content.builtin.image':
                 style = nodeStyle.image;
                 break;
-            case 2:
+            case 'content.builtin.attachment':
                 style = nodeStyle.file;
                 break;
-            case 3:
+            case 'content.builtin.text':
                 style = nodeStyle.content;
                 break;
             default:
-                style = nodeStyle.text;
+                style = nodeStyle.title;
                 break;
         }
         return style;

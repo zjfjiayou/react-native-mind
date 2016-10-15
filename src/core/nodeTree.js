@@ -71,7 +71,7 @@ class NodeTree {
         //计算标题所占长度与高度
         this.allNode.forEach(node => {
             let p = new Promise((resolve, reject) => {
-                testLength.processString(node.data.text, {
+                testLength.processString(node.data.title, {
                         font: 'Heiti SC',
                         fontSize: node.style.title.fontSize
                     }, {
@@ -88,39 +88,45 @@ class NodeTree {
             promiseList.push(p);
 
             //切分文件标题
-            if (node.data.type === 2) {
-                let p = new Promise((resolve, reject) => {
-                    splitText.processString(node.data.content[0].name, {
-                        font: 'Heiti SC',
-                        fontSize: node.style.title.fontSize
-                    }, {
-                        width: node.style.text.width,
-                        height: 50
-                    }, (error, textList) => {
-                        node.data.fileNameList = textList
-                        resolve();
+            if (node.data.content_type === 'content.builtin.attachment') {
+                node.data.fileNameList = [];
+                if(node.data.content&&node.serializeContent.length){
+                    let p = new Promise((resolve, reject) => {
+                        splitText.processString(node.serializeContent[0].file_name, {
+                            font: 'Heiti SC',
+                            fontSize: node.style.title.fontSize
+                        }, {
+                            width: node.style.fileName.width,
+                            height: 50
+                        }, (error, textList) => {
+                            node.data.fileNameList = textList
+                            resolve();
+                        });
                     });
-                });
-                promiseList.push(p);
+                    promiseList.push(p);
+                }
             }
 
             //切分正文
-            if (node.data.type === 3) {
-                let p = new Promise((resolve, reject) => {
-                    splitText.processString(node.data.content, {
-                        font: 'Heiti SC',
-                        fontSize: node.style.title.fontSize
-                    }, {
-                        width: node.style.text.width,
-                        height: 50
-                    }, (error, textList) => {
-                        node.data.contentList = textList.filter((item) => {
-                            return item != ''
+            if (node.data.content_type === 'content.builtin.text') {
+                node.data.contentList = [];
+                if(node.data.content&&node.data.content.length){
+                    let p = new Promise((resolve, reject) => {
+                        splitText.processString(node.data.content.replace(/<[^>]+>/g,''), {
+                            font: 'Heiti SC',
+                            fontSize: node.style.text.fontSize
+                        }, {
+                            width: node.style.text.width,
+                            height: 50
+                        }, (error, textList) => {
+                            node.data.contentList = textList.filter((item) => {
+                                return item != ''
+                            });
+                            resolve();
                         });
-                        resolve();
                     });
-                });
-                promiseList.push(p);
+                    promiseList.push(p);
+                }
             }
         });
 
@@ -129,16 +135,16 @@ class NodeTree {
             //计算内容所占大小
             this.allNode.forEach(node => {
                 let style = node.style;
-                switch (node.data.type) {
-                    case 1:
-                        node.contentBox.width = ((node.data.content ? node.data.content.length : 0) + 1) * (style.content.singleWidth + style.content.marginLeft) - style.content.marginLeft + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
+                switch (node.data.content_type) {
+                    case 'content.builtin.image':
+                        node.contentBox.width = ((node.data.content ? node.serializeContent.length : 0) + 1) * (style.content.singleWidth + style.content.marginLeft) - style.content.marginLeft + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
                         node.contentBox.height = style.content.singleHeight + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;
-                    case 2:
+                    case 'content.builtin.attachment':
                         node.contentBox.width = style.content.singleWidth + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
                         node.contentBox.height = style.content.singleHeight + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;
-                    case 3:
+                    case 'content.builtin.text':
                         node.contentBox.width = style.content.singleWidth + style.content.paddingLeft + style.content.paddingRight + 2 * style.content.x;
                         node.contentBox.height = style.content.singleHeight * node.data.contentList.length + style.content.paddingTop + style.content.paddingBottom + style.content.y;
                         break;

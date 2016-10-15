@@ -27,13 +27,24 @@ class Content extends Component {
             }
             return <Text
                         key={index}
-                        {...nodeStyle.content.title}
+                        {...nodeStyle.content.text}
                         y={nodeData.titleBox.height+nodeStyle.content.content.paddingTop+index*nodeStyle.lineHeight}
                         x={nodeStyle.content.content.x+nodeStyle.content.content.paddingLeft}
                     >
                     {item}
                 </Text>
         });
+
+        if(!nodeData.data.contentList.length){
+            textList=<Text
+                        {...nodeStyle.content.text}
+                        fontSize='12'
+                        y={nodeData.titleBox.height+2}
+                        x={nodeStyle.content.content.x+nodeStyle.content.content.paddingLeft}
+                    >
+                    请填写内容
+                </Text>
+        }
 
         return (
             <G>
@@ -42,7 +53,7 @@ class Content extends Component {
                     width={nodeData.shape.width}
                     height={nodeData.shape.height}
                 />
-                <Text {...nodeStyle.content.title}>{nodeData.data.text}</Text>
+                <Text {...nodeStyle.content.title}>{nodeData.data.title}</Text>
                <Rect
                     {...nodeStyle.image.content}
                     width={nodeData.contentBox.width-2*nodeStyle.image.content.x}

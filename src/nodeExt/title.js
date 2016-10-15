@@ -11,7 +11,7 @@ import {
 
 import nodeStyle from '../style/node.style'
 
-class T extends Component {
+class Title extends Component {
     constructor(props) {
         super(props);
     }
@@ -21,15 +21,15 @@ class T extends Component {
         return (
             <G>
                <Rect
-                    {...nodeStyle.text.nodeBox}
+                    {...nodeStyle.title.nodeBox}
                     width={nodeData.shape.width}
                     height={nodeData.shape.height}
                 />
-              <Text {...nodeStyle.text.title}>{nodeData.data.text}</Text>
+              <Text {...nodeStyle.title.title}>{nodeData.data.title}</Text>
             </G>
         );
     }
 }
 
 
-export default T;
+export default Title;

@@ -20,30 +20,18 @@ class File extends Component {
     render() {
         let {nodeData}=this.props;
 
-        let addIcon;
-
-        //添加图像的
-        // if(!nodeData.data.content.length){
-        //     addIcon = <G
-        //                     y={nodeData.titleBox.height+nodeStyle.image.content.paddingTop}
-        //                     x={nodeStyle.image.content.x+nodeData.data.content.length*(nodeStyle.image.content.singleWidth+nodeStyle.image.content.marginLeft)+nodeStyle.image.content.marginLeft}
-        //                 >
-        //                     <Rect
-        //                         fill='#fff'
-        //                         stroke='#ccc'
-        //                         width={nodeStyle.image.content.singleWidth}
-        //                         height={nodeStyle.image.content.singleHeight}
-        //                     />
-        //                     <Text
-        //                         y='-10'
-        //                         x='7'
-        //                         fontSize = '40'
-        //                         fontWeight='400'
-        //                         fontFamily = 'Heiti SC'
-        //                         fill='#ccc'
-        //                     >+</Text>
-        //                 </G>
-        // }
+        if(!nodeData.data.fileNameList||!nodeData.data.fileNameList.length){
+            return (
+                <G>
+                   <Rect
+                        {...nodeStyle.title.nodeBox}
+                        width={nodeData.shape.width}
+                        height={nodeData.shape.height}
+                    />
+                  <Text {...nodeStyle.title.title}>{nodeData.data.title}</Text>
+                </G>
+            );
+        }
 
         return (
             <G>
@@ -52,7 +40,7 @@ class File extends Component {
                     width={nodeData.shape.width}
                     height={nodeData.shape.height}
                 />
-                <Text {...nodeStyle.file.title}>{nodeData.data.text}</Text>
+                <Text {...nodeStyle.file.title}>{nodeData.data.title}</Text>
                <Rect
                     {...nodeStyle.image.content}
                     width={nodeData.contentBox.width-2*nodeStyle.image.content.x}
@@ -67,16 +55,16 @@ class File extends Component {
                     x={nodeStyle.file.content.x+nodeStyle.file.content.marginLeft}
                     preserveAspectRatio="xMinYMin slice"/>
                 <Text
-                    {...nodeStyle.file.title}
+                    {...nodeStyle.file.fileName}
                     y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop}
-                    x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.text.marginLeft}
+                    x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.fileName.marginLeft}
                 >
                     {nodeData.data.fileNameList[0]}
                 </Text>
                <Text
-                    {...nodeStyle.file.title}
+                    {...nodeStyle.file.fileName}
                     y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop+20}
-                    x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.text.marginLeft}
+                    x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.fileName.marginLeft}
                 >
                     {nodeData.data.fileNameList[1]}
                 </Text>

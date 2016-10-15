@@ -6,7 +6,7 @@ module.exports = {
     blankBottom: 10,
     blankLeft: 60,
     lineHeight:20,
-    text:{
+    title:{
         title: {
             fontSize: 14,
             fontFamily: 'Heiti SC',
@@ -75,7 +75,9 @@ module.exports = {
             singleWidth:40,
             singleHeight:40
         },
-        text:{
+        fileName:{
+            fontSize: 14,
+            fontFamily: 'Heiti SC',
             marginLeft:10,
             width:100
         }
@@ -106,6 +108,8 @@ module.exports = {
             y:10
         },
         text:{
+            fontSize: 14,
+            fontFamily: 'Heiti SC',
             marginLeft:10,
             width:140
         }

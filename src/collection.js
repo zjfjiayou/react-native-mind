@@ -50,7 +50,7 @@ class Collection extends Component {
         }
 
         const nodeList = this.allNode.map(node=>{
-            return <Node redraw={this.layout} nodeData={node} key={node.data.id}></Node>
+            return <Node redraw={this.layout} nodeData={node} key={node.data.node_id}></Node>
         });
 
         //加了一个反转，使得子节点先渲染，进而使得子节点的连线先渲染，最后在渲染节点上的图片

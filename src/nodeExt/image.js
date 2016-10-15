@@ -20,25 +20,29 @@ class Img extends Component {
     render() {
         let {nodeData}=this.props;
 
+        let imageList=[];
+
         //图像列表
-        let imageList=nodeData.data.content.map((item,index)=>{
-            return  <Image
-                    key={index}
-                    href={item.url}
-                    width={nodeStyle.image.content.singleWidth}
-                    height={nodeStyle.image.content.singleHeight}
-                    y={nodeData.titleBox.height+nodeStyle.image.content.paddingTop}
-                    x={nodeStyle.image.content.x+index*(nodeStyle.image.content.singleWidth+nodeStyle.image.content.marginLeft)+nodeStyle.image.content.marginLeft}
-                    preserveAspectRatio="xMinYMin slice"/>
-        });
+        if(nodeData.data.content&&nodeData.serializeContent.length){
+              imageList=nodeData.serializeContent.map((item,index)=>{
+                return  <Image
+                        key={index}
+                        href={item.url}
+                        width={nodeStyle.image.content.singleWidth}
+                        height={nodeStyle.image.content.singleHeight}
+                        y={nodeData.titleBox.height+nodeStyle.image.content.paddingTop}
+                        x={nodeStyle.image.content.x+index*(nodeStyle.image.content.singleWidth+nodeStyle.image.content.marginLeft)+nodeStyle.image.content.marginLeft}
+                        preserveAspectRatio="xMinYMin slice"/>
+            });
+        }
 
         //添加图像的
-        if(nodeData.data.content.length<4){
+        if(nodeData.serializeContent.length<4){
             imageList.push(
                         <G
                             key='add'
                             y={nodeData.titleBox.height+nodeStyle.image.content.paddingTop}
-                            x={nodeStyle.image.content.x+nodeData.data.content.length*(nodeStyle.image.content.singleWidth+nodeStyle.image.content.marginLeft)+nodeStyle.image.content.marginLeft}
+                            x={nodeStyle.image.content.x+nodeData.serializeContent.length*(nodeStyle.image.content.singleWidth+nodeStyle.image.content.marginLeft)+nodeStyle.image.content.marginLeft}
                         >
                             <Rect
                                 fill='#fff'
@@ -72,7 +76,7 @@ class Img extends Component {
                     y={nodeData.titleBox.height}
                 />
                 {imageList}
-                <Text {...nodeStyle.image.title}>{nodeData.data.text}</Text>
+                <Text {...nodeStyle.image.title}>{nodeData.data.title}</Text>
             </G>
         );
     }

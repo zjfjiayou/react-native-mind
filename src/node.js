@@ -6,7 +6,7 @@ import {G,Rect} from 'react-native-svg'
 import Connect from './connect'
 import Expand from './expand'
 
-import Text from './nodeExt/text'
+import Title from './nodeExt/title'
 import Image from './nodeExt/image'
 import File from './nodeExt/file'
 import Content from './nodeExt/content'
@@ -43,18 +43,18 @@ class Node extends Component {
 
 
         //节点类型分类
-        switch(nodeData.data.type){
-            case 1:
+        switch(nodeData.data.content_type){
+            case 'content.builtin.image':
                 node=<Image nodeData={nodeData}></Image>;
                 break;
-            case 2:
+            case 'content.builtin.attachment':
                 node=<File nodeData={nodeData}></File>;
                 break;
-            case 3:
+            case 'content.builtin.text':
                 node=<Content nodeData={nodeData}></Content>;
                 break;
             default:
-                node=<Text nodeData={nodeData}></Text>;
+                node=<Title nodeData={nodeData}></Title>;
                 break;
         }
 
