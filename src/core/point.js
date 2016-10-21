@@ -1,10 +1,11 @@
 class Point {
 
-    constructor(x, y, offsetX, childOffsetY) {
+    constructor(x, y, offsetX, childOffsetY,offsetY) {
         this.x = x;
         this.y = y;
         this.childOffsetY = childOffsetY;
         this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     set x(x) {
@@ -38,6 +39,15 @@ class Point {
     get offsetX() {
         return this._offsetX;
     }
+
+    set offsetY(offsetY){
+        this._offsetY = offsetY;
+    }
+
+    get offsetY() {
+        return this._offsetY;
+    }
+    
 }
 
 

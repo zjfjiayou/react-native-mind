@@ -63,47 +63,6 @@ class NodeTree {
         return this;
     }
 
-    layoutIsOverlap() {
-        for(let i=0,iEnd=this.allNode.length;i<iEnd;i++){
-            let node=this.allNode[i];
-            for(let j=0;j<iEnd;j++){
-                let node1=this.allNode[j];
-                if(i==j)break;
-
-                if(node.overlap(node1)[0]){
-                    return true;
-                }
-            }
-
-        }
-        return false;
-    }
-
-    //计算坐标系
-    calcCoordinate(){
-        //计算节点Y轴偏移位置
-        this.allNode.forEach((node,index)=>{
-
-                node.point.childOffsetY=0;
-                node.point.offsetX=0;
-                node.point.x=0;
-                node.point.y=0;
-
-                if(node.isRoot()){
-                    return
-                }
-
-                node._index=index;
-
-                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+node.blank.height+node.parent.point.y+node.parent.point.childOffsetY
-
-                //记录偏移
-                node.parent.point.childOffsetY+=node.shape.height+node.blank.height;
-                node.point.x=node.parent.point.offsetX+node.parent.shape.width+nodeStyle.blankLeft;;
-                node.point.offsetX=node.point.x;
-        });  
-    }
-
     //计算节点位置
     calcPosition() {
 
@@ -112,11 +71,6 @@ class NodeTree {
         //计算标题所占长度与高度
         this.allNode.forEach(node => {
             let p = new Promise((resolve, reject) => {
-
-                if(node.data.title==''){
-                    node.data.title='new node';
-                }
-
                 testLength.processString(node.data.title, {
                         font: 'Heiti SC',
                         fontSize: node.style.title.fontSize
@@ -199,6 +153,7 @@ class NodeTree {
 
             //计算节点所占区域大小
             this.root.postTraverse((node)=>{
+
                 node.area.width=node.shape.width;
 
                 if(node.isRoot()){
@@ -208,63 +163,34 @@ class NodeTree {
                 if(node.isLeaf()){
                     node.parent.area.height+=node.shape.height;
                     node.area.height=node.shape.height;
-
+                    if(!node.isLast()){
+                        node.parent.area.height+=nodeStyle.blankBottom;
+                        node.area.height+=nodeStyle.blankBottom;
+                    }
                 }else{
-                    node.parent.area.height+=node.shape.height;
-                }               
+                    node.parent.area.height+=node.area.height;
+                }
 
             });
-            
-            let times=110;
-            while (times>0) {
-                    let p=false;
-                    this.calcCoordinate();
-                    for (let i = 0, iEnd = this.allNode.length; i < iEnd; i++) {
-                        let node = this.allNode[i];
-                        for (let j = 0; j < iEnd; j++) {
-                            let node1 = this.allNode[j];
-                            if (i == j) break;
 
-                            let data = node.overlap(node1)
+            //计算节点Y轴偏移位置
+            this.allNode.forEach((node,index)=>{
 
-                            if (data[0]) {
-                                p=true;
-                                let temp;
-                                if (node._index > node1._index) {
-                                    temp = node
-                                } else {
-                                    temp = node1;
-                                };
+                if(node.isRoot()){
+                    return
+                }
 
-                                //找到通用的父节点
-                                let cp=node.commonParent(node1);
+                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+(node.area.height-node.shape.height)/2+node.parent.point.y+node.parent.point.childOffsetY
 
-                                //找到需要改变的节点
-                                while(temp){
-                                    if(temp.parent.data.node_id==cp.data.node_id){
-                                        break;
-                                    }
-                                    temp=temp.parent;
-                                }
-
-                                //会出现临界值
-                                temp.blank.height+=Math.ceil(data[2]);
-                                //迭代将加了偏移的节点父级区域放大
-                                while(temp.parent){
-                                    temp.parent.area.height+=data[2];
-                                    temp=temp.parent;
-                                }
-                                break;
-                            }
-                        }
-                        if(p)break;
-                    }
-                    times--;
-            }
-
-            console.log('迭代次数：'+times);
-
-            
+                //记录偏移
+                if(node.isLeaf()){
+                    node.parent.point.childOffsetY+=node.shape.height+nodeStyle.blankBottom;
+                }else{
+                    node.parent.point.childOffsetY+=node.area.height;
+                }
+                node.point.x=node.parent.point.offsetX+node.parent.shape.width+nodeStyle.blankLeft;
+                node.point.offsetX=node.point.x;
+            });
 
             emitter.emit('collection.redraw');
         });

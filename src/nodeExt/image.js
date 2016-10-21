@@ -27,7 +27,7 @@ class Img extends Component {
               imageList=nodeData.serializeContent.map((item,index)=>{
                 return  <Image
                         key={index}
-                        href={item.url}
+                        href={item.url||require('../icon/ic_default_picture.png')}
                         width={nodeStyle.image.content.singleWidth}
                         height={nodeStyle.image.content.singleHeight}
                         y={nodeData.titleBox.height+nodeStyle.image.content.paddingTop}

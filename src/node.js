@@ -63,8 +63,6 @@ class Node extends Component {
             return <G></G>
         }
 
-        console.log('update')
-
         return (
             <G
                 y={nodeData.point.y}

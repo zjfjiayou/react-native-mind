@@ -12,10 +12,11 @@ class Node {
         this.parent = null;
         this.root = this;
         this.children = [];
-        this.point = new Point(0, 0, 0, 0);
+        this.point = new Point(0, 0, 0, 0,0);
         this.titleBox = new Box(0, 0);
         this.contentBox = new Box(0, 0);
         this.area = new Box(0, 0);
+        this.blank= new Box(0, 0);
 
         // 数据
         // this.data = {
@@ -24,6 +25,88 @@ class Node {
         // };
         this.data=data;
 
+    }
+
+    //将节点平移到第四象限
+    translationY(node){
+        let p1,p2,p3,p4;
+
+        p1=[this.coordinate.x1,this.coordinate.y1];
+        p2=[this.coordinate.x3,this.coordinate.y3];
+        p3=[node.coordinate.x1,node.coordinate.y1];
+        p4=[node.coordinate.x3,node.coordinate.y3];
+
+        let increment;
+        increment=Math.max(Math.abs(p1[1]),Math.abs(p3[1]));
+
+        return [
+                [p1[0],p1[1]+increment],
+                [p2[0],p2[1]+increment],
+                [p3[0],p3[1]+increment],
+                [p4[0],p4[1]+increment]
+               ]
+
+    }
+
+    //判断节点的子节点是否覆盖,算法参考http://www.cnblogs.com/avril/archive/2013/04/01/2993875.html
+    overlap(node){
+        let points,m,n;
+
+        points=this.translationY(node);
+
+        m=[Math.max(points[0][0],points[2][0]),Math.max(points[0][1],points[2][1])];
+        n=[Math.min(points[1][0],points[3][0]),Math.min(points[1][1],points[3][1])];
+
+
+        if((m[0]<n[0])&&(m[1]<n[1])){
+            // console.log(node.data.title,this.data.title,points,this.coordinate,node.coordinate)
+            return [true,Math.abs(n[0]-m[0]),n[1]-m[1]];
+        }else{
+            return [false,0,0]
+        }
+    }
+
+    //获取第一个子节点
+    get firstChild(){
+        for(let i,iEnd=this.children.length;i<iEnd;i++){
+            if (this.children[i].isFirst()){
+                return this.children[i]; 
+            }
+        }
+    }
+
+    //共同的父节点
+    commonParent(node){
+        let p1 = node;
+        while (p1) {
+            let p2=this;
+            while(p2){
+                if(p2.data.node_id==p1.data.node_id){
+                    return p2;
+                }
+                p2=p2.parent;
+            }
+            p1 = p1.parent;
+        }
+    }
+
+    //获取最后一个子节点
+    get lastChild(){
+        for(let i,iEnd=this.children.length;i<iEnd;i++){
+            if (this.children[i].isLast()){
+                return this.children[i]; 
+            }
+        }
+    }    
+
+    get coordinate(){
+        let x1,x2,x3,x4,y1,y2,y3,y4;
+        x4=x1=this.point.x-25;
+        x3=x2=this.point.x+this.shape.width;
+        y2=y1=this.point.y;
+        y4=y3=this.point.y+this.shape.height+10;
+        
+        return {x1,x2,x3,x4,y1,y2,y3,y4};
     }
 
     getData(key) {
@@ -140,6 +223,21 @@ class Node {
 
     traverse(fn, excludeThis) {
         return this.preTraverse(fn, excludeThis);
+    }
+
+    get prev(){
+
+        if(this.index===0||this.isRoot()){
+            return null;
+        }
+
+        for(let i=0,iEnd=this.parent.children.length;i<iEnd;i++){
+
+            if((this.parent.children[i].index-1)==this.index){
+                return this.parent.children[i];
+            }
+        }
+
     }
 
     insertChild(node, index) {
