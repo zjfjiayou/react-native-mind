@@ -6,16 +6,23 @@ class Expand extends Component {
 
     constructor(props) {
         super(props);
+        this.state={
+            expand:true
+        }
         this.hideChildren=this.hideChildren.bind(this);
     }
 
     hideChildren(){
-        this.props.hideChildren();
+        this.state.expand=!this.state.expand
+        // this.setState({
+        //     expand:newExpand
+        // })
+        this.props.hideChildren(this.state.expand);
     }
 
     render() {
         const {nodeData}=this.props;
-        const x = nodeData.shape.width+18;
+        const x = nodeData.shape.width+10;
         const y = nodeData.shape.height/2-10;
 
         //判断是否显示收缩展开图标
@@ -24,8 +31,15 @@ class Expand extends Component {
         }
 
         return (
-            <G x={x} y={y} onPress={this.hideChildren}>
-                <Image href={require('./icon/expand-open.png')} width='20' height='20'/>
+            <G 
+                x={x} 
+                y={y} 
+                onPress={this.hideChildren}
+            >
+                {this.state.expand
+                    ?<Image href={require('./icon/expand-open.png')} width='20' height='20'/>
+                    :<Image href={require('./icon/expand-close.png')} width='20' height='20'/>
+                }
             </G>
         );
     }

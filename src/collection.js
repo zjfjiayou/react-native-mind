@@ -4,8 +4,10 @@ import {emitter} from './core/utils'
 
 import {G} from 'react-native-svg'
 
-import NodeTree from './core/nodeTree'
-import Node from './node';
+import {NodeTree} from './core/nodeTree'
+import Node from './node'
+import command from './core/command'
+import options from './core/options'
 
 class Collection extends Component {
     static propTypes = {
@@ -20,12 +22,6 @@ class Collection extends Component {
             nodeTree:new NodeTree(this.props.nodeTree.root)
         }
 
-        emitter.once('collection.redraw',()=>{
-            this.setState({
-                ready:true
-            });
-        });
-
         this.layout=this.layout.bind(this);
 
     }
@@ -39,7 +35,28 @@ class Collection extends Component {
     }
 
     componentDidMount() {
-        console.log('一棵节点树渲染完成');
+        const self=this;
+
+        command.register('changeLayout',(mode,rootId)=>{
+            if(rootId==self.state.nodeTree.root.data.node_id){
+                self.state.nodeTree.chooseLayout(mode);
+                command.exec('redraw',rootId);
+            }
+        });
+
+        command.register('redraw',(rootId)=>{
+            if(rootId==self.state.nodeTree.root.data.node_id){
+                self.state.nodeTree.calcPosition();
+            }
+        });
+
+        command.register('draw',(rootId)=>{
+            if(rootId==self.state.nodeTree.root.data.node_id){
+                this.setState({
+                    ready:true
+                });
+            }
+        });        
     }
 
 

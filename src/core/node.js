@@ -12,6 +12,7 @@ class Node {
         this.parent = null;
         this.root = this;
         this.children = [];
+        this._chenged=true;
         this.point = new Point(0, 0, 0, 0,0);
         this.titleBox = new Box(0, 0);
         this.contentBox = new Box(0, 0);
@@ -19,12 +20,15 @@ class Node {
         this.blank= new Box(0, 0);
 
         // 数据
-        // this.data = {
-        //     id: utils.guid(),
-        //     created: +new Date()
-        // };
         this.data=data;
+    }
 
+    init(){
+        this.point = new Point(0, 0, 0, 0,0);
+        this.titleBox = new Box(0, 0);
+        this.contentBox = new Box(0, 0);
+        this.area = new Box(0, 0);
+        this.blank= new Box(0, 0);
     }
 
     //将节点平移到第四象限
@@ -52,6 +56,11 @@ class Node {
     overlap(node){
         let points,m,n;
 
+        //节点收起就不会重合
+        if(node.data.expand===false){
+            return [false,0,0]
+        }
+
         points=this.translationY(node);
 
         m=[Math.max(points[0][0],points[2][0]),Math.max(points[0][1],points[2][1])];
@@ -59,7 +68,6 @@ class Node {
 
 
         if((m[0]<n[0])&&(m[1]<n[1])){
-            // console.log(node.data.title,this.data.title,points,this.coordinate,node.coordinate)
             return [true,Math.abs(n[0]-m[0]),n[1]-m[1]];
         }else{
             return [false,0,0]
@@ -115,7 +123,7 @@ class Node {
 
     setData(key, value) {
         if (typeof key == 'object') {
-            var data = key;
+            let data = key;
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
                     this.data[key] = data[key];
@@ -132,7 +140,7 @@ class Node {
     }
 
     get level() {
-        var level = 0,
+        let level = 0,
             ancestor = this.parent;
         while (ancestor) {
             level++;
@@ -202,9 +210,9 @@ class Node {
      * @param  {Function} fn 遍历函数
      */
     preTraverse(fn, excludeThis) {
-        var children = this.getChildren();
+        let children = this.getChildren();
         if (!excludeThis) fn(this);
-        for (var i = 0; i < children.length; i++) {
+        for (let i = 0; i < children.length; i++) {
             children[i].preTraverse(fn);
         }
     }
@@ -214,8 +222,8 @@ class Node {
      * @param  {Function} fn 遍历函数
      */
     postTraverse(fn, excludeThis) {
-        var children = this.getChildren();
-        for (var i = 0; i < children.length; i++) {
+        let children = this.getChildren();
+        for (let i = 0; i < children.length; i++) {
             children[i].postTraverse(fn);
         }
         if (!excludeThis) fn(this);

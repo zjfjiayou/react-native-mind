@@ -10,7 +10,7 @@ import Title from './nodeExt/title'
 import Image from './nodeExt/image'
 import File from './nodeExt/file'
 import Content from './nodeExt/content'
-
+import command from './core/command'
 
 class Node extends Component {
     constructor(props) {
@@ -19,20 +19,22 @@ class Node extends Component {
         this.hideChildren=this.hideChildren.bind(this);
     }
 
-    hideChildren(){
-        this.props.nodeData.data.expand=!this.props.nodeData.data.expand;
+    hideChildren(expand){
 
-        console.log(this.props.nodeData.data.expand)
+        this.props.nodeData.postTraverse((node)=>{
+            node.data.expand=expand;
+            node._chenged=true;
+        },true);
 
-        this.props.redraw()
+        command.exec('redraw',this.props.nodeData.root.data.node_id);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log(nextProps.nodeData.data.expand,this.props.nodeData.data.expand,nextState)
-        // if(nextProps.nodeData.data.expand!=this.props.nodeData.data.expand){
-        //     return true;
-        // }
-        return false
+        if(nextProps.nodeData._chenged){
+            nextProps.nodeData._chenged=false;
+            return true;
+        }
+        return false;
     }
 
     render(){
@@ -59,7 +61,7 @@ class Node extends Component {
         }
 
         //判断节点是否展开
-        if(!nodeData.isRoot()&&nodeData.parent.data.expand===false){
+        if(!nodeData.isRoot()&&nodeData.data.expand===false){
             return <G></G>
         }
 

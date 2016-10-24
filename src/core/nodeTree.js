@@ -6,12 +6,20 @@ import {
 } from './utils'
 import Node from './node'
 import nodeStyle from '../style/node.style'
+import options from './options'
+import command from './command'
 
 
 //获取文字宽度
 const testLength = NativeModules.Testlength;
 //切分文字
 const splitText = NativeModules.splitTextByWidth;
+
+let algorithm = {};
+
+function register(name, obj) {
+    algorithm[name] = obj;
+}
 
 class NodeTree {
     constructor(nodeData) {
@@ -20,6 +28,14 @@ class NodeTree {
 
         //计算节点大小和位置
         this.calcPosition();
+
+        this.chooseLayout=this.chooseLayout.bind(this);
+
+        this.chooseLayout('compact');
+    }
+
+    chooseLayout(mode){
+        this.layout = algorithm[mode];
     }
 
     get root() {
@@ -28,10 +44,16 @@ class NodeTree {
 
     get allNode() {
         var nodes = [];
-        this.root.traverse(function(node) {
+        this.root.traverse(function (node) {
             nodes.push(node);
         });
         return nodes;
+    }
+
+    initAllNode(){
+        this.allNode.forEach(node=>{
+            node.init()
+        });
     }
 
     //递归导入节点数据
@@ -64,13 +86,13 @@ class NodeTree {
     }
 
     layoutIsOverlap() {
-        for(let i=0,iEnd=this.allNode.length;i<iEnd;i++){
-            let node=this.allNode[i];
-            for(let j=0;j<iEnd;j++){
-                let node1=this.allNode[j];
-                if(i==j)break;
+        for (let i = 0, iEnd = this.allNode.length; i < iEnd; i++) {
+            let node = this.allNode[i];
+            for (let j = 0; j < iEnd; j++) {
+                let node1 = this.allNode[j];
+                if (i == j) break;
 
-                if(node.overlap(node1)[0]){
+                if (node.overlap(node1)[0]) {
                     return true;
                 }
             }
@@ -79,48 +101,25 @@ class NodeTree {
         return false;
     }
 
-    //计算坐标系
-    calcCoordinate(){
-        //计算节点Y轴偏移位置
-        this.allNode.forEach((node,index)=>{
-
-                node.point.childOffsetY=0;
-                node.point.offsetX=0;
-                node.point.x=0;
-                node.point.y=0;
-
-                if(node.isRoot()){
-                    return
-                }
-
-                node._index=index;
-
-                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+node.blank.height+node.parent.point.y+node.parent.point.childOffsetY
-
-                //记录偏移
-                node.parent.point.childOffsetY+=node.shape.height+node.blank.height;
-                node.point.x=node.parent.point.offsetX+node.parent.shape.width+nodeStyle.blankLeft;;
-                node.point.offsetX=node.point.x;
-        });  
-    }
-
     //计算节点位置
     calcPosition() {
 
         let promiseList = [];
 
+        this.initAllNode();
+
         //计算标题所占长度与高度
         this.allNode.forEach(node => {
             let p = new Promise((resolve, reject) => {
 
-                if(node.data.title==''){
-                    node.data.title='new node';
+                if (node.data.title == '') {
+                    node.data.title = 'new node';
                 }
 
                 testLength.processString(node.data.title, {
-                        font: 'Heiti SC',
-                        fontSize: node.style.title.fontSize
-                    }, {
+                    font: 'Heiti SC',
+                    fontSize: node.style.title.fontSize
+                }, {
                         width: 400,
                         height: 50
                     },
@@ -136,18 +135,18 @@ class NodeTree {
             //切分文件标题
             if (node.data.content_type === 'content.builtin.attachment') {
                 node.data.fileNameList = [];
-                if(node.data.content&&node.serializeContent.length){
+                if (node.data.content && node.serializeContent.length) {
                     let p = new Promise((resolve, reject) => {
                         splitText.processString(node.serializeContent[0].file_name, {
                             font: 'Heiti SC',
                             fontSize: node.style.title.fontSize
                         }, {
-                            width: node.style.fileName.width,
-                            height: 50
-                        }, (error, textList) => {
-                            node.data.fileNameList = textList
-                            resolve();
-                        });
+                                width: node.style.fileName.width,
+                                height: 50
+                            }, (error, textList) => {
+                                node.data.fileNameList = textList
+                                resolve();
+                            });
                     });
                     promiseList.push(p);
                 }
@@ -156,20 +155,20 @@ class NodeTree {
             //切分正文
             if (node.data.content_type === 'content.builtin.text') {
                 node.data.contentList = [];
-                if(node.data.content&&node.data.content.length){
+                if (node.data.content && node.data.content.length) {
                     let p = new Promise((resolve, reject) => {
-                        splitText.processString(node.data.content.replace(/<[^>]+>/g,''), {
+                        splitText.processString(node.data.content.replace(/<[^>]+>/g, ''), {
                             font: 'Heiti SC',
                             fontSize: node.style.text.fontSize
                         }, {
-                            width: node.style.text.width,
-                            height: 50
-                        }, (error, textList) => {
-                            node.data.contentList = textList.filter((item) => {
-                                return item != ''
+                                width: node.style.text.width,
+                                height: 50
+                            }, (error, textList) => {
+                                node.data.contentList = textList.filter((item) => {
+                                    return item != ''
+                                });
+                                resolve();
                             });
-                            resolve();
-                        });
                     });
                     promiseList.push(p);
                 }
@@ -197,79 +196,16 @@ class NodeTree {
                 }
             });
 
-            //计算节点所占区域大小
-            this.root.postTraverse((node)=>{
-                node.area.width=node.shape.width;
-
-                if(node.isRoot()){
-                    return
-                }
-
-                if(node.isLeaf()){
-                    node.parent.area.height+=node.shape.height;
-                    node.area.height=node.shape.height;
-
-                }else{
-                    node.parent.area.height+=node.shape.height;
-                }               
-
+            //强制节点刷新
+            this.allNode.forEach(node=>{
+                node._chenged=true;
             });
-            
-            let times=110;
-            while (times>0) {
-                    let p=false;
-                    this.calcCoordinate();
-                    for (let i = 0, iEnd = this.allNode.length; i < iEnd; i++) {
-                        let node = this.allNode[i];
-                        for (let j = 0; j < iEnd; j++) {
-                            let node1 = this.allNode[j];
-                            if (i == j) break;
 
-                            let data = node.overlap(node1)
-
-                            if (data[0]) {
-                                p=true;
-                                let temp;
-                                if (node._index > node1._index) {
-                                    temp = node
-                                } else {
-                                    temp = node1;
-                                };
-
-                                //找到通用的父节点
-                                let cp=node.commonParent(node1);
-
-                                //找到需要改变的节点
-                                while(temp){
-                                    if(temp.parent.data.node_id==cp.data.node_id){
-                                        break;
-                                    }
-                                    temp=temp.parent;
-                                }
-
-                                //会出现临界值
-                                temp.blank.height+=Math.ceil(data[2]);
-                                //迭代将加了偏移的节点父级区域放大
-                                while(temp.parent){
-                                    temp.parent.area.height+=data[2];
-                                    temp=temp.parent;
-                                }
-                                break;
-                            }
-                        }
-                        if(p)break;
-                    }
-                    times--;
-            }
-
-            console.log('迭代次数：'+times);
-
-            
-
-            emitter.emit('collection.redraw');
+            this.layout.init.bind(this)();
+            command.exec('draw',this.root.data.node_id);
         });
     }
-
 }
 
-module.exports = NodeTree;
+module.exports.NodeTree = NodeTree;
+module.exports.register = register;

@@ -28,72 +28,98 @@ import {
   NativeModules
 } from 'react-native';
 
-import Minder from 'react-native-mind'
+import {Minder,emitter,command} from 'react-native-mind'
 
 const Dimensions = require('Dimensions');
 const TOTALWIDTH = Dimensions.get('window').width;
 const TOTALHEIGHT = Dimensions.get('window').height;
 
-const dataList = [{
+
+let dataList = [{
   "root": {
     "data": {
-      "id": "522bbeef44ec",
-      "created": 1460421842,
-      "text": "脑图构建流程",
-      "type": 0
+      "node_id": "522bbeef44ec",
+      "title": "根节点",
+      "content_type": "content.builtin.title",
+      "content":""
     },
     "children": [{
       "data": {
-        "id": "b7f3m1o36u0c",
-        "created": 1474965441670,
-        "text": "二级节点",
-        "type": 3,
-        "content":'i love you so much,那么爱你为什么？'
-      }
+        "node_id": "b7f3m1o36u0c",
+        "title": "二级节点1",
+        "content_type": "content.builtin.title"
+      },
+    "children": [{
+        "data": {
+          "node_id": "b7f323vlqyp4o",
+          "title": "三级节点1",
+          "content_type": "content.builtin.title",
+          "content":""
+        }
+      }, {
+        "data": {
+          "node_id": "b7f3m1l3qy24o",
+          "title": "三级节点2",
+          "content_type": "content.builtin.title",
+          "content":""
+        },
+      }, {
+        "data": {
+          "node_id": "b7f3m4vl33p4o",
+          "title": "三级节点3",
+          "content_type": "content.builtin.title",
+          "content":""
+        }
+      }]      
     }, {
       "data": {
-        "id": "b7f3m1o16u2c",
-        "created": 1474965441670,
-        "text": "我是很长的节点",
-        "type": 0
+        "node_id": "b7f3m1o16u2c",
+        "title": "二级211111",
+        "content_type": "content.builtin.title",
+        "content":""
       },
       "children": [{
         "data": {
-          "id": "b7f33vlqyp4o",
-          "created": 1474965506832,
-          "text": "三级节点4",
-          "type": 0
+          "node_id": "b7f33vlqyp4o",
+          "title": "三级节点4",
+          "content_type": "content.builtin.title",
+          "content":""
         }
       }, {
         "data": {
-          "id": "b7f3m1lqy24o",
-          "created": 1474965506832,
-          "text": "三级节点5",
-          "type": 0
-        }
+          "node_id": "b7f3m1lqy24o",
+          "title": "三级节点5",
+          "content_type": "content.builtin.title",
+          "content":""
+        },
       }, {
         "data": {
-          "id": "b7f3mvl33p4o",
-          "created": 1474965506832,
-          "text": "三级节点6",
-          "type": 0
+          "node_id": "b7f3mvl33p4o",
+          "title": "三级节点6",
+          "content_type": "content.builtin.title",
+          "content":""
+        }
+      },{
+        "data": {
+          "node_id": "b7f3mvl323p4o",
+          "title": "三级节点7",
+          "content_type": "content.builtin.title",
+          "content":""
         }
       }]
     }, {
       "data": {
-        "id": "b7f3m1o26usc",
-        "created": 1474965441670,
-        "text": "二级节点222",
-        "type": 2,
-        "expand":true,
-        "content":[{suffix:'text',name:'德玛西亚万岁.jpge'}]
+        "node_id": "b7f3m1o26usc",
+        "title": "二级3",
+        "content_type": "content.builtin.title",
+        "content":""
       }
     }, {
       "data": {
-        "id": "b7f3m1o26u2c",
-        "created": 1474965441670,
-        "text": "二级节点222驱蚊器问2",
-        "type": 0
+        "node_id": "b7f3m1o26u2c",
+        "title": "二级4",
+        "content_type": "content.builtin.title",
+        "content":""
       }
     }]
   }

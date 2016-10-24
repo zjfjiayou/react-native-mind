@@ -13,7 +13,20 @@ import {
     G
 } from 'react-native-svg';
 
+import {emitter} from './core/utils'
+
+import options from './core/options';
+import command from './core/command';
 import Collection from './collection';
+
+//引入布局算法
+require('./layout/compact');
+require('./layout/normal');
+
+//引入命令行
+// require('./command/changeLayout');
+
+
 class Minder extends Component {
     static propTypes = {
         dataList: PropTypes.array,
@@ -41,8 +54,8 @@ class Minder extends Component {
         this._panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponder: () => true,
-            onStartShouldSetPanResponderCapture: () => true,
-            onMoveShouldSetPanResponderCapture: () => true,
+            // onStartShouldSetPanResponderCapture: () => true,
+            // onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderGrant: this.press,
             onPanResponderMove: this.move,
             onPanResponderRelease: this.pressOut
@@ -117,4 +130,6 @@ class Minder extends Component {
     }
 }
 
-export default Minder;
+module.exports.Minder=Minder;
+module.exports.emitter=emitter;
+module.exports.command=command;
