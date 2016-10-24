@@ -1,6 +1,6 @@
 {
   "name": "react-native-mind",
-  "version": "0.0.15",
+  "version": "0.1.0",
   "description": "react native for mind",
   "main": "./index.js",
   "repository": {
