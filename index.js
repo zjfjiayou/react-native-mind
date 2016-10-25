@@ -1,2 +1,4 @@
-import Minder from './src/minder'
-export default Minder;
+import {Minder,emitter,command} from './src/minder'
+module.exports.Minder=Minder;
+module.exports.emitter=emitter;
+module.exports.command=command;
