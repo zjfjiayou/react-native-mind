@@ -66,6 +66,7 @@ const compact = {
                         //找到通用的父节点
                         let cp = node.commonParent(node1);
 
+
                         //找到需要改变的节点
                         while (temp) {
                             if (temp.parent.data.node_id == cp.data.node_id) {
@@ -73,19 +74,18 @@ const compact = {
                             }
                             temp = temp.parent;
                         }
+                        console.log(node.data.title,node1.data.title,cp.data.title,temp.data.title);
 
                         //妈蛋！会出现临界值
                         temp.blank.height += Math.ceil(data[2]);
-                        //迭代将加了偏移的节点父级区域放大
-                        while (temp.parent) {
-                            temp.parent.area.height += data[2];
-                            temp = temp.parent;
-                        }
+
+                        temp.root.area.height+=data[2];
                         break;
                     }
                 }
                 if (p) break;
             }
+
         }
     }
 }
