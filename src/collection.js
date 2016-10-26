@@ -37,6 +37,7 @@ class Collection extends Component {
     componentDidMount() {
         const self=this;
 
+        //修改显示模式
         command.register('changeLayout',(mode,rootId)=>{
             if(rootId==self.state.nodeTree.root.data.node_id){
                 self.state.nodeTree.chooseLayout(mode);
@@ -44,21 +45,39 @@ class Collection extends Component {
             }
         });
 
+        //重算坐标并重绘绘
         command.register('redraw',(rootId)=>{
             if(rootId==self.state.nodeTree.root.data.node_id){
                 self.state.nodeTree.calcPosition();
             }
         });
 
-        command.register('draw',(rootId)=>{
+        //重绘
+        command.register('layout',(rootId)=>{
             if(rootId==self.state.nodeTree.root.data.node_id){
                 this.setState({
                     ready:true
                 });
             }
-        });        
+        });
+
+        //获取根节点
+        command.register('getRoot',(rootId)=>{
+            if(rootId&&(rootId==self.state.nodeTree.root.data.node_id)){
+                return self.state.nodeTree.root;
+            }
+
+            if(rootId==undefined){
+                return self.state.nodeTree.root;
+            }
+        });
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(this.state.ready){
+            emitter.emit('tree.layout',this.state.nodeTree.root);
+        }
+    }
 
     render() {
 

@@ -5,7 +5,8 @@ import React, {
 
 
 import {
-    PanResponder
+    PanResponder,
+    View
 } from 'react-native';
 
 import {
@@ -19,12 +20,12 @@ import options from './core/options';
 import command from './core/command';
 import Collection from './collection';
 
+//引入插件
+import {Navigation} from './plugins'
+
 //引入布局算法
 require('./layout/compact');
 require('./layout/normal');
-
-//引入命令行
-// require('./command/changeLayout');
 
 
 class Minder extends Component {
@@ -102,7 +103,7 @@ class Minder extends Component {
         this._initX=this.state.x;
         this._initY=this.state.y;
     }
-
+    
     render() {
 
         if(!this.props.dataList||!this.props.dataList.length){
@@ -114,18 +115,21 @@ class Minder extends Component {
         });
 
         return (
-            <Svg
-                style={{flex:1}}
-                {...this._panResponder.panHandlers}
-            >
-                <G
-                    x={this.state.x}
-                    y={this.state.y+this.props.height/2}
-                    scale={this.state.scale}
+            <View style={{flex:1}}>
+                <Svg
+                    style={{flex:1}}
+                    {...this._panResponder.panHandlers}
                 >
-                    {pageContent}
-                </G>
-            </Svg>
+                    <G
+                        x={this.state.x}
+                        y={this.state.y+this.props.height/2}
+                        scale={this.state.scale}
+                    >
+                        {pageContent}
+                        <Navigation/>
+                    </G>
+                </Svg>
+            </View>
         );
     }
 }

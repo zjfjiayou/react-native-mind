@@ -5,11 +5,17 @@ class Command{
     }
 
     exec(key){
+        let result=[];
         if(this._command.hasOwnProperty(key)){
             this._command[key].forEach((item)=>{
-                item.apply(this,Array.prototype.slice.call(arguments,1));
+                result.push(item.apply(this,Array.prototype.slice.call(arguments,1)));
             });
         }
+
+        if(result.length===1){
+            return result[0];
+        }
+        return result;
     }
 
     register(key,value){

@@ -14,10 +14,8 @@ class Expand extends Component {
 
     hideChildren(){
         this.state.expand=!this.state.expand
-        // this.setState({
-        //     expand:newExpand
-        // })
         this.props.hideChildren(this.state.expand);
+        emitter.emit('expand.press',nodeData);
     }
 
     render() {

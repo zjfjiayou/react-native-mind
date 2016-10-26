@@ -14,12 +14,16 @@ const compact = {
                 node.point.y=0;
 
                 if(node.isRoot()){
+                    node.area.height=0;
+                    node.children.forEach((item)=>{
+                        node.area.height+=item.shape.height+item.blank.height;
+                    });
                     return
                 }          
 
                 node._index=index;
 
-                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+node.blank.height+node.parent.point.y+node.parent.point.childOffsetY
+                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+node.blank.height+node.parent.point.y+node.parent.point.childOffsetY-(node.parent.children.length-1)*5;
 
                 //记录偏移
                 node.parent.point.childOffsetY+=node.shape.height+node.blank.height;
@@ -74,12 +78,10 @@ const compact = {
                             }
                             temp = temp.parent;
                         }
-                        console.log(node.data.title,node1.data.title,cp.data.title,temp.data.title);
-
                         //妈蛋！会出现临界值
                         temp.blank.height += Math.ceil(data[2]);
 
-                        temp.root.area.height+=data[2];
+                        // temp.root.area.height+=data[2];
                         break;
                     }
                 }

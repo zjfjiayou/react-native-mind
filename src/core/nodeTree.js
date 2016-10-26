@@ -6,7 +6,6 @@ import {
 } from './utils'
 import Node from './node'
 import nodeStyle from '../style/node.style'
-import options from './options'
 import command from './command'
 
 
@@ -202,7 +201,7 @@ class NodeTree {
             });
 
             this.layout.init.bind(this)();
-            command.exec('draw',this.root.data.node_id);
+            command.exec('layout',this.root.data.node_id);
         });
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import pureRender from 'pure-render-decorator'
 
+import {emitter} from './core/utils'
 import {G,Rect} from 'react-native-svg'
 
 import Connect from './connect'
@@ -69,10 +69,16 @@ class Node extends Component {
             <G
                 y={nodeData.point.y}
                 x={nodeData.point.x}
-                onPress={()=>{console.log(nodeData)}}
+                onPress={()=>{
+                    emitter.emit('node.press',nodeData);
+                }}
             >
                 <Connect nodeData={nodeData}/>
+                <G
+                    id={nodeData.data.node_id}
+                >
                 {node}
+                </G>
                 <Expand nodeData={nodeData} hideChildren={this.hideChildren}></Expand>
             </G>
         );

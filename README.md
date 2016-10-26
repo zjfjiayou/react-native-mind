@@ -18,6 +18,38 @@ or use `rnpm` instead:
 ##preview
 ![image](./demo.png)
 ##Usage
+
+###Event
+```javascript
+  #一个节点树开始绘制
+  emitter.on('tree.layout',(rootId)=>{
+    console.log(rootId)
+  })
+```
+
+```javascript
+  #点击节点
+  emitter.on('node.press',(node)=>{
+    console.log(node)
+  })
+```
+
+```javascript
+  #点击收起展开
+  emitter.on('expand.press',(node)=>{
+    console.log(node)
+  })
+```
+
+###command
+```javascript
+  #正常模式
+  command.exec('changeLayout','normal',rootId);
+  #聚拢模式
+  command.exec('changeLayout','compact',rootId);  
+```
+
+###Example
 ```javascript
 import React, { Component } from 'react';
 import {

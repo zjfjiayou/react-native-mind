@@ -57,7 +57,7 @@ class Node {
         let points,m,n;
 
         //节点收起就不会重合
-        if(node.data.expand===false){
+        if(node.data.expand===false||this.data.expand===false){
             return [false,0,0]
         }
 
