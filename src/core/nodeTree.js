@@ -2,7 +2,8 @@ import {
     NativeModules
 } from 'react-native'
 import {
-    emitter
+    emitter,
+    ClearBr
 } from './utils'
 import Node from './node'
 import nodeStyle from '../style/node.style'
@@ -115,6 +116,9 @@ class NodeTree {
                 if (node.data.title == '') {
                     node.data.title = 'new node';
                 }
+
+                //去除空格
+                node.data.title=ClearBr(node.data.title);
 
                 testLength.processString(node.data.title, {
                     font: 'Heiti SC',

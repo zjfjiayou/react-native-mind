@@ -1,5 +1,5 @@
 const config={
-    layout:'normal', //compact,normal
+    layout:'compact', //compact,normal
     navigation:false
 }
 

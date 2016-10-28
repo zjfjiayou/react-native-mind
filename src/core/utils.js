@@ -19,3 +19,10 @@ exports.comparePlainObject = function(a, b) {
         return toString.apply(obj) == '[object ' + v + ']';
     };
 });
+
+
+exports.ClearBr=function(key) { 
+    key = key.replace(/<\/?.+?>/g,""); 
+    key = key.replace(/[\r\n]/g, ""); 
+    return key; 
+} 
