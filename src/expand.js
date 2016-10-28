@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import {emitter} from './core/utils'
+
 import {Image,G} from 'react-native-svg'
 
 class Expand extends Component {
@@ -15,7 +17,7 @@ class Expand extends Component {
     hideChildren(){
         this.state.expand=!this.state.expand
         this.props.hideChildren(this.state.expand);
-        emitter.emit('expand.press',nodeData);
+        emitter.emit('expand.press',this.props.nodeData);
     }
 
     render() {

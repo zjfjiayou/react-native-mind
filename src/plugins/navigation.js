@@ -9,17 +9,33 @@ import {
 import {
     G,
     Use,
+    Rect
 } from 'react-native-svg';
 
-import Point from '../core/point'
+import Point from '../core/point';
 
-import { emitter } from '../core/utils'
-import command from '../core/command'
+import { emitter } from '../core/utils';
+import command from '../core/command';
 
-const DH = {
-    G: Animated.createAnimatedComponent(G)
+import nodeStyle from '../style/node.style'
+
+
+class AG extends Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <G {...this.props} opacity={this.props.opacity}></G>
+        );
+    }
 }
 
+const DH = {
+    G: Animated.createAnimatedComponent(AG)
+}
+
+var animateMap=[];
 
 //计算节点位置
 function calcPosition(node){
@@ -36,6 +52,20 @@ function calcPosition(node){
         offsetY+=item.shape.height+10;
     }));
 }
+var animateMap={};
+
+//搞动画
+function makeAnimate(node){
+    animateMap={};
+
+    //计算节点要到达的位置
+    calcPosition(node);
+
+    node.children.forEach((item=>{
+        animateMap[item.data.node_id]={opacity:new Animated.Value(0),y:new Animated.Value(node.point.y)};
+    }));
+}
+
 
 class Navigation extends Component {
 
@@ -44,38 +74,48 @@ class Navigation extends Component {
 
         this.state = {
             ready: false,
-            activeNode: undefined,
-            opacity:new Animated.Value(0)
+            activeNode: undefined
         }
 
         emitter.once('tree.layout', (rootNode) => {
-            this.setState({
-                ready: true,
-                activeNode: rootNode
-            });
-
-            this.forceUpdate()
+            this.state.ready=true;
+            this.state.activeNode=rootNode;
+            
+            makeAnimate(rootNode);
+            this.dh();
+            this.forceUpdate();
         });
 
         emitter.on('node.press', (node) => {
-            this.setState({ activeNode: node });
-            this.forceUpdate();
+            //移动到当前节点
+            command.exec('moveToStart',node.root.data.node_id,node.point);
+            this.state.activeNode=node;
+            
+            makeAnimate(node);
             this.dh();
+            this.forceUpdate();
         });
 
         this.dh=this.dh.bind(this);
     }
 
     dh(){
-        this.state.opacity.setValue(0);     
-        Animated.timing(                          
-        this.state.opacity,                 
-        {
-            toValue:1,
-            duration: 500,
-            easing:Easing.inOut(Easing.ease)          
-        }
-        ).start();  
+        this.state.activeNode.children.forEach((item)=>{
+            animateMap[item.data.node_id].opacity.setValue(0);
+            animateMap[item.data.node_id].y.setValue(item.point.y);
+
+            Animated.parallel([Animated.timing(animateMap[item.data.node_id].opacity,                 
+            {
+                toValue:1,
+                duration: 300,
+                easing:Easing.inOut(Easing.ease)          
+            }),Animated.timing(animateMap[item.data.node_id].y,                 
+            {
+                toValue:item.navigation.y,
+                duration: 300,
+                easing:Easing.inOut(Easing.ease)          
+            })]).start(); 
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -88,23 +128,28 @@ class Navigation extends Component {
             return <G></G>
         }
 
-        //计算节点要到达的位置
-        calcPosition(this.state.activeNode);
-
         let childrenList = this.state.activeNode.children.map((node, index) => {
 
             return (<DH.G
                         key={index}
-                        y={node.point.y}
+                        y={animateMap[node.data.node_id].y}
                         x={node.point.x}
-                         opacity={this.state.opacity}
+                        opacity={animateMap[node.data.node_id].opacity}
+                        strokeWidth="3"
+                        onPress={()=>{
+                            emitter.emit('node.press',node);
+                        }}
                         >
-                        <Use href={'#' + node.data.node_id} x="-30" />
+                            <Rect
+                                width={node.shape.width}
+                                height={node.shape.height}
+                            />
+                            <Use href={'#' + node.data.node_id}/>
                     </DH.G>);
         });
 
         return (
-            <G style={{opacity:"0"}}>
+            <G >         
                 {childrenList}
             </G>
         );

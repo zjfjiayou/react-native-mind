@@ -71,6 +71,16 @@ class Collection extends Component {
                 return self.state.nodeTree.root;
             }
         });
+
+        //获取根节点
+        command.register('moveToStart',(rootId,point)=>{
+            if(rootId&&(rootId==self.state.nodeTree.root.data.node_id)){
+
+                this.props.moveToStart(point);
+
+                return self.state.nodeTree.root;
+            }
+        });        
     }
 
     componentDidUpdate(prevProps, prevState) {

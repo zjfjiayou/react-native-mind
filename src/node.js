@@ -69,13 +69,14 @@ class Node extends Component {
             <G
                 y={nodeData.point.y}
                 x={nodeData.point.x}
-                onPress={()=>{
-                    emitter.emit('node.press',nodeData);
-                }}
+
             >
                 <Connect nodeData={nodeData}/>
                 <G
                     id={nodeData.data.node_id}
+                    onPress={(evn)=>{
+                        emitter.emit('node.press',nodeData);
+                    }}                    
                 >
                 {node}
                 </G>

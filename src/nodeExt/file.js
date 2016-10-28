@@ -54,20 +54,26 @@ class File extends Component {
                     y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop}
                     x={nodeStyle.file.content.x+nodeStyle.file.content.marginLeft}
                     preserveAspectRatio="xMinYMin slice"/>
-                <Text
+                {nodeData.data.fileNameList[0]
+                ?<Text
                     {...nodeStyle.file.fileName}
                     y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop}
                     x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.fileName.marginLeft}
                 >
                     {nodeData.data.fileNameList[0]}
                 </Text>
-               <Text
+                :<G/>
+                }
+                {nodeData.data.fileNameList[1]
+                ?<Text
                     {...nodeStyle.file.fileName}
-                    y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop+20}
+                    y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop}
                     x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.fileName.marginLeft}
                 >
                     {nodeData.data.fileNameList[1]}
                 </Text>
+                :<G/>
+                }   
             </G>
         );
     }

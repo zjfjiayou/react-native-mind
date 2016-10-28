@@ -49,6 +49,7 @@ class Minder extends Component {
         this.move=this.move.bind(this);
         this.press=this.press.bind(this);
         this.pressOut=this.pressOut.bind(this);
+        this.moveToStart=this.moveToStart.bind(this);
     }
 
     componentWillMount() {
@@ -103,6 +104,15 @@ class Minder extends Component {
         this._initX=this.state.x;
         this._initY=this.state.y;
     }
+
+    moveToStart(point){
+        this.setState({
+            x:-point.x,
+            y:-point.y
+        });
+        this._initX=-point.x;
+        this._initY=-point.y;        
+    }
     
     render() {
 
@@ -111,7 +121,7 @@ class Minder extends Component {
         }
 
         const pageContent = this.props.dataList.map(nodeTree=>{
-            return <Collection nodeTree={nodeTree} key={nodeTree.root.data.node_id}></Collection>
+            return <Collection moveToStart={this.moveToStart} nodeTree={nodeTree} key={nodeTree.root.data.node_id}></Collection>
         });
 
         return (
@@ -126,7 +136,10 @@ class Minder extends Component {
                         scale={this.state.scale}
                     >
                         {pageContent}
-                        <Navigation/>
+                        {options.get('navigation')
+                        ?<Navigation/>
+                        :<G/>
+                        }
                     </G>
                 </Svg>
             </View>

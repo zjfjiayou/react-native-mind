@@ -7,6 +7,7 @@ import {
 import Node from './node'
 import nodeStyle from '../style/node.style'
 import command from './command'
+import options from './options'
 
 
 //获取文字宽度
@@ -30,7 +31,7 @@ class NodeTree {
 
         this.chooseLayout=this.chooseLayout.bind(this);
 
-        this.chooseLayout('compact');
+        this.chooseLayout(options.get('layout'));
     }
 
     chooseLayout(mode){

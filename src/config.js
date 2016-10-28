@@ -1,5 +1,6 @@
 const config={
-    layout:'normal'
+    layout:'normal', //compact,normal
+    navigation:false
 }
 
 export default config;
