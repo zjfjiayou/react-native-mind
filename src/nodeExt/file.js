@@ -67,7 +67,7 @@ class File extends Component {
                 {nodeData.data.fileNameList[1]
                 ?<Text
                     {...nodeStyle.file.fileName}
-                    y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop}
+                    y={nodeData.titleBox.height+nodeStyle.file.content.paddingTop+20}
                     x={nodeStyle.file.content.x+nodeStyle.file.content.paddingLeft+nodeStyle.file.thumb.singleWidth+nodeStyle.file.fileName.marginLeft}
                 >
                     {nodeData.data.fileNameList[1]}
