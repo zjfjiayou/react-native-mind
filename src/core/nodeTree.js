@@ -140,6 +140,8 @@ class NodeTree {
             if (node.data.content_type === 'content.builtin.attachment') {
                 node.data.fileNameList = [];
                 if (node.data.content && node.serializeContent.length) {
+                    //去除空格
+                    node.serializeContent[0].file_name=ClearBr(node.serializeContent[0].file_name);   
                     let p = new Promise((resolve, reject) => {
                         splitText.processString(node.serializeContent[0].file_name, {
                             font: 'Heiti SC',
@@ -160,8 +162,10 @@ class NodeTree {
             if (node.data.content_type === 'content.builtin.text') {
                 node.data.contentList = [];
                 if (node.data.content && node.data.content.length) {
+                    //去除空格
+                    node.data.content=ClearBr(node.data.content);                         
                     let p = new Promise((resolve, reject) => {
-                        splitText.processString(node.data.content.replace(/<[^>]+>/g, ''), {
+                        splitText.processString(node.data.content, {
                             font: 'Heiti SC',
                             fontSize: node.style.text.fontSize
                         }, {
