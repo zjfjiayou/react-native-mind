@@ -1,0 +1,245 @@
+//规则参照https://github.com/lfkid/ESLint-rules-docs-cn
+{
+  "parser": "babel-eslint",
+
+  "ecmaFeatures": {
+    "jsx": true
+  },
+
+  "env": {
+    "es6": true,
+    "jasmine": true,
+  },
+
+  "plugins": [
+    "react"
+  ],
+
+  // Map from global var to bool specifying if it can be redefined
+  "globals": {
+    "__DEV__": true,
+    "__dirname": false,
+    "__fbBatchedBridgeConfig": false,
+    "alert": false,
+    "cancelAnimationFrame": false,
+    "cancelIdleCallback": false,
+    "clearImmediate": true,
+    "clearInterval": false,
+    "clearTimeout": false,
+    "console": false,
+    "document": false,
+    "escape": false,
+    "Event": false,
+    "EventTarget": false,
+    "exports": false,
+    "fetch": false,
+    "FormData": false,
+    "global": false,
+    "jest": false,
+    "Map": true,
+    "module": false,
+    "navigator": false,
+    "process": false,
+    "Promise": true,
+    "requestAnimationFrame": true,
+    "requestIdleCallback": true,
+    "require": false,
+    "Set": true,
+    "setImmediate": true,
+    "setInterval": false,
+    "setTimeout": false,
+    "window": false,
+    "XMLHttpRequest": false,
+    "pit": false,
+
+    // Flow global types.
+    "ReactComponent": false,
+    "ReactClass": false,
+    "ReactElement": false,
+    "ReactPropsCheckType": false,
+    "ReactPropsChainableTypeChecker": false,
+    "ReactPropTypes": false,
+    "SyntheticEvent": false,
+    "$Either": false,
+    "$All": false,
+    "$Tuple": false,
+    "$Supertype": false,
+    "$Subtype": false,
+    "$Shape": false,
+    "$Diff": false,
+    "$Keys": false,
+    "$Enum": false,
+    "$Exports": false,
+    "$FlowIssue": false,
+    "$FlowFixMe": false,
+    "$FixMe": false
+  },
+
+  "rules": {
+    "comma-dangle": 0,               // 不允许或强制在对象字面量或者数组属性的结尾使用逗号
+    "no-cond-assign": 1,             // 条件判断语句中不允许赋值操作
+    "no-console": 0,                 // 不允许使用console中的所有方法
+    "no-constant-condition": 0,      // 不允许在条件判断语句中使用常数
+    "no-control-regex": 1,           // 正则表达式中不允许使用控制字符
+    "no-debugger": 1,                // 不允许使用debugger
+    "no-dupe-keys": 1,               // 方法的参数中不允许有重复值
+    "no-empty": 0,                   // 不允许空的块语句
+    "no-ex-assign": 1,               // 不允许对try...catch语句中catch的参数赋值
+    "no-extra-boolean-cast": 1,      // 不允许多余的布尔值转换操作。如!!!foo或!!bar ? baz : bat等
+    "no-extra-parens": 0,            // 不允许在表达式外面套一层多余的括号
+    "no-extra-semi": 1,              // 不允许多余的分号
+    "no-func-assign": 1,             // 不允许为一个函数赋值
+    "no-inner-declarations": 0,      // 函数或者变量的声明要放在程序的最外层或者另一个函数体内，不要在if等代码块中定义函数和变量
+    "no-invalid-regexp": 1,          // 不允许在RegExp构造函数中传递不合法的正则表达式字符串
+    "no-negated-in-lhs": 1,          // 在in运算的左侧操作数前不允许使用否定符号!
+    "no-obj-calls": 1,               // 不允许将Math、JSON等全局的对象当做函数进行调用
+    "no-regex-spaces": 1,            // 不允许在正则表达式中出现超过1个的连续空格
+    "no-reserved-keys": 0,           // disallow reserved words being used as object literal keys (off by default)
+    "no-sparse-arrays": 1,           // 不允许稀疏数组
+    "no-unreachable": 1,             // 不允许在return、throw、continue、break等中断语句之后出现代码，因为这些代码永远不会被执行到
+    "use-isnan": 1,                  // 判断一个数是否是NaN的时候不允许使用foo === NaN这样的操作，而是使用isNaN函数进行判断
+    "valid-jsdoc": 0,                // 不允许使用不合法的JSDoc注释
+    "valid-typeof": 1,               // typeof的结果必须和一个有效的字符串进行比较，如typeof foo === 'strnig'即是不合法的字符串
+
+  // Best Practices
+  // These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
+
+    "block-scoped-var": 0,           // 不允许在代码块外使用在代码块内定义的变量
+    "complexity": [2,5],                 // 限制代码层级的复杂度，如if...else if...else等。配置参数是一个数值，表示层级数量
+    "consistent-return": 0,          // 当函数有分支的时候，确保所有的return要么都有返回值，要么都没有返回值。
+    "curly": 1,                      // if...else、while等语句必须使用 大括号{}包括
+    "default-case": 0,               // switch代码块必须含有一个default分支。
+    "dot-notation": 1,               // 建议使用foo.bar获取对象的属性，不推荐使用中括号法foo["bar"]
+    "eqeqeq": [1, "allow-null"],     // 使用===和!==代替==和!=
+    "guard-for-in": 0,               // for...in...语句代码块中必须使用if语句来判断对象的属性是否是从原型链上继承而来的
+    "no-alert": 1,                   // 不允许使用alert、confirm和prompt方法
+    "no-caller": 1,                  // 不允许使用arguments.caller或arguments.callee
+    "no-div-regex": 1,               // 不允许正则表达式的开头看起来像是一个除号，如/=bar/，这样的写法类似+=、-=等，具有迷惑性，必须使用转义符号才可以/\=bar/
+    "no-else-return": 0,             // 如果一个if语句含有return，就没有必要使用else语句块了，原本放在else语句块内的代码可以直接写在代码块外
+    "no-eq-null": 0,                 // 和null比较时，不允许使用==或!=，而是使用===或!==
+    "no-eval": 1,                    // 不允许使用eval语句
+    "no-extend-native": 1,           // 不允许在原生对象的prototype上添加属性
+    "no-extra-bind": 1,              // 避免在function上使用没有必要的bind
+    "no-fallthrough": 1,             // 不允许switch...case出现“贯穿”情况，即一个case代码块执行过之后继续执行下一个case代码块。除非使用break、return、throw或者特殊注释等方法中断下一个case执行
+    "no-floating-decimal": 1,        // 浮点数小数点前后必须有数字
+    "no-implied-eval": 1,            // 不允许使用隐含的eval语句，例如setTimeout('var foo=1;',10)
+    "no-labels": 1,                  // 不允许使用label语句块
+    "no-iterator": 1,                // 不允许使用__iterator__属性。
+    "no-lone-blocks": 1,             // 不允许使用没有必要的代码块
+    "no-loop-func": 0,               // 不允许在循环中声明函数
+    "no-multi-str": 0,               // 不允许多行创建字符串
+    "no-native-reassign": 0,         // 不允许对原生对象进行重写
+    "no-new": 1,                     // 调用new关键字生成对象的时候，必须将生成的实例赋值给变量
+    "no-new-func": 1,                // 不允许使用Function构造函数创建函数。
+    "no-new-wrappers": 1,            // 创建基本数据类型的时候不使用构造器函数生成。如String、Number、Boolean等
+    "no-octal": 1,                   // 不允许使用八进制的语法
+    "no-octal-escape": 1,            // 不允许使用八进制转义 such as var foo = "Copyright \251";
+    "no-proto": 1,                   // 不允许使用__proto__属性
+    "no-redeclare": 0,               // 不允许重复定义变量
+    "no-return-assign": 1,           // 在return语句中不进行赋值操作
+    "no-script-url": 1,              // 不允许使用javascript:这样的语句。如location.href = "javascript:void(0)";会报错
+    "no-self-compare": 1,            // 不允许和自身比较的比较操作
+    "no-sequences": 1,               // 不允许使用逗号操作符
+    "no-unused-expressions": 0,      // 不允许出现没有被使用的表达式或值。下列选项均可作为配置选项
+    "no-void": 1,                    // 不允许使用void操作符
+    "no-warning-comments": 0,        // 不允许使用含有警告提示信息的注释。下列选项均可作为配置选项 // e.g. TODO or FIXME (off by default)
+    "no-with": 1,                    // 不允许使用with语句
+    "radix": 1,                      // 调用parseInt函数的时候必须传递第二个参数指明进制
+    "semi-spacing": 1,	             // 定义分号前后是否需要添加空格
+    "vars-on-top": 0,                // 变量要在其所在作用域的最开始声明
+    "wrap-iife": 0,                  // 立即执行函数需要使用括号包裹
+    "yoda": 1,                       // 比较运算中，对象字面量应该写在比较操作符的左边，而变量应该写在比较操作符的右边
+
+  // Variables
+  // These rules have to do with variable declarations.
+
+    "no-catch-shadow": 1,            // 不在catch语句外面的作用域定于和catch语句参数同名的变量
+    "no-delete-var": 1,              // 不允许使用delete foo删除变量
+    "no-label-var": 1,               // 不允许有和某一个label同名的变量
+    "no-shadow": 1,                  // 不允许在当前作用域内定义作用域外已有的同名变量
+    "no-shadow-restricted-names": 1, // 声明变量不能覆盖JavaScript中的保留关键字
+    "no-undef": 2,                   // 不允许使用没有定义的变量
+    "no-undefined": 0,               // 不允许使用undefined作为变量名或者函数形参
+    "no-undef-init": 1,              // 不允许直接将一个变量定义为undefined，如var foo = undefined;
+    "no-unused-vars": [1, {"vars": "all", "args": "none"}], // 不允许出现定义了但是没有使用的变量。下列选项均可作为配置选项
+    "no-use-before-define": 0,       // 变量应该先定义后使用
+
+  // Node.js
+  // These rules are specific to JavaScript running on Node.js.
+
+    "handle-callback-err": 1,        // 回调函数中必须进行错误处理。默认的代表错误变量的参数是err
+    "no-mixed-requires": 1,          // 调用require()方法不和其他变量声明或者require()混合使用。也就是require多个模块的生活不要使用同一个var，即var fs=require('fs'),path=require('path');是不允许的
+    "no-new-require": 1,             // 不允许使用new require()
+    "no-path-concat": 1,             // 不允许使用__dirname+"foo.js"或__filename+"bar.html"这样拼接路径，建议使用path.join或者path.resolve方法
+    "no-process-exit": 0,            // 不允许使用process.exit()方法
+    "no-restricted-modules": 1,      // 限制使用某些模块，被限制的模块名称数组。如['fs','path']
+    "no-sync": 0,                    // 不允许使用同步方法，如fs.readFileSync()等
+
+  // Stylistic Issues
+  // These rules are purely matters of style and are quite subjective.
+
+    "key-spacing": 0,                //规定对象字面量中的键值对之间是否有空格
+    "keyword-spacing": 1,            // enforce spacing before and after keywords
+    "jsx-quotes": [1, "prefer-double"], //规定JSX语法中，属性使用单引号还是双引号
+    "comma-spacing": 0,              //逗号前后是否添加空格
+    "no-multi-spaces": 0,            //在逻辑表达式、条件表达式、申明语句、数组元素、对象属性、sequences、函数参数等地方不使用超过一个的空白符
+    "brace-style": 0,                // 大括号的样式和缩进样式，该规则主要是用来描述大括号在控制语句中的位置
+    "camelcase": 0,                  // require camel case names
+    "consistent-this": [1, "self"],            // 指定哪些变量可以赋值为this。被指定为this别名的变量不能被赋予其他值，this也只能赋值到这些指定的别名变量上且变量必须在定义的作用域内被赋值，如下代码是错误的
+    "eol-last": 1,                   // 文件最后必须有一行空行
+    "func-names": 0,                 // 方法必须有名字，也就是不允许匿名方法。
+    "func-style": 0,                 // 指定使用哪种函数声明方式，即函数申明和函数表达式
+    "new-cap": 0,                    // 规定作为构造函数的函数名首字母必须大写，不作为构造函数的首字母必须小写
+    "new-parens": 1,                 // 不允许在调用构造函数的时候遗漏()，即new Person是不合法的
+    "no-nested-ternary": 0,          // 不允许嵌套三元运算符
+    "no-array-constructor": 1,       // 不允许使用Array构造函数创建数组
+    "no-lonely-if": 0,               // 不允许在else语句中只出现一个单独的if语句
+    "no-new-object": 1,              // 不允许使用new Object()这样的写法。
+    "no-spaced-func": 1,             // 函数调用时，允许函数名和括号之间出现空格
+    "no-ternary": 0,                 // 不允许三元运算符
+    "no-trailing-spaces": 1,         // 行末不允许出现空格
+    "no-underscore-dangle": 0,       // 不允许在标示符前后使用下划线
+    "no-mixed-spaces-and-tabs": 1,   // 不要空格和tab混合使用进行缩进
+    "quotes": [1, "single", "avoid-escape"], // 规定使用单引号、双引号还是反义符（ES2015）
+    "quote-props": 0,                // 对象的属性名是否需要加引号
+    "semi": 1,                       // r分号党和无分号党之争 ：）
+    "sort-vars": 0,                  // 定义按照顺序声明变量，如var a,b,c;而不是var b,c,a;
+    "space-in-brackets": 0,          // require or disallow spaces inside brackets (off by default)
+    "space-in-parens": 0,            // 规定括号内部的空格。规定是否需要在(右边，或者)左边加空格。但是无论哪一种要求，() 写法都是可以的
+    "space-infix-ops": 1,            // 规定操作符左右是否需要添加空格
+    "space-unary-ops": [1, { "words": true, "nonwords": false }], // 规定在一元操作符前后是否加空
+    "max-nested-callbacks":  [2, 5],       // 规定回调函数最大的嵌套层次。类似于max-depth
+    "one-var": 0,                    // 规定在一个作用域内是否只使用一个var或let或cons
+    "wrap-regex": 0,                 // 要求在正则表达式的双斜杠外面加一个圆括号，来消除歧义。如/foo/.test("bar")是不合法的，必须是(/foo/).test("bar")
+
+  // Legacy
+  // The following rules are included for compatibility with JSHint and JSLint. While the names of the rules may not match up with the JSHint/JSLint counterpart, the functionality is the same.
+
+    "max-depth":  [2, 5],             // 规定代码最大的嵌套层次
+    "max-len": 0,                    // 规定单行代码最大长度
+    "max-params": 0,                 // 规定函数参数的最大数量
+    "max-statements": 0,             // 规定函数中可以声明的变量的最大个数
+    "no-bitwise": 1,                 // 不允许使用位操作符，如|、^、~、>>、<<等
+    "no-plusplus": 0,                // 不允许使用++和--运算符
+
+  // React Plugin
+  // The following rules are made available via `eslint-plugin-react`.
+
+    "react/display-name": 0,
+    "react/jsx-boolean-value": 0,             //当属性值等于true的时候，省略该属性的赋值
+    "react/jsx-no-duplicate-props": 2,
+    "react/jsx-no-undef": 1,
+    "react/jsx-sort-props": 0,
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1,
+    "react/no-did-mount-set-state": 1,
+    "react/no-did-update-set-state": 1,
+    "react/no-multi-comp": 0,
+    "react/no-string-refs": 1,
+    "react/no-unknown-property": 0,
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 1,
+    "react/self-closing-comp": 1,
+    "react/wrap-multilines": 0,
+  }
+}
