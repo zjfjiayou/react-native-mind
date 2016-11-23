@@ -1,9 +1,6 @@
-import utils from './utils'
-import Point from './point'
-import Box from './box'
-
-import nodeStyle from '../style/node.style'
-
+import Point from './point';
+import Box from './box';
+import nodeStyle from '../style/node.style';
 
 class Node {
     constructor(data) {
@@ -12,109 +9,109 @@ class Node {
         this.parent = null;
         this.root = this;
         this.children = [];
-        this._chenged=true;
-        this.point = new Point(0, 0, 0, 0,0);
+        this._chenged = true;
+        this.point = new Point(0, 0, 0, 0, 0);
         this.titleBox = new Box(0, 0);
         this.contentBox = new Box(0, 0);
         this.area = new Box(0, 0);
-        this.blank= new Box(0, 0);
+        this.blank = new Box(0, 0);
 
         // 数据
-        this.data=data;
+        this.data = data;
     }
 
-    init(){
-        this.point = new Point(0, 0, 0, 0,0);
+    init() {
+        this.point = new Point(0, 0, 0, 0, 0);
         this.titleBox = new Box(0, 0);
         this.contentBox = new Box(0, 0);
         this.area = new Box(0, 0);
-        this.blank= new Box(0, 0);
+        this.blank = new Box(0, 0);
     }
 
     //将节点平移到第四象限
-    translationY(node){
-        let p1,p2,p3,p4;
+    translationY(node) {
+        let p1, p2, p3, p4;
 
-        p1=[this.coordinate.x1,this.coordinate.y1];
-        p2=[this.coordinate.x3,this.coordinate.y3];
-        p3=[node.coordinate.x1,node.coordinate.y1];
-        p4=[node.coordinate.x3,node.coordinate.y3];
+        p1 = [this.coordinate.x1, this.coordinate.y1];
+        p2 = [this.coordinate.x3, this.coordinate.y3];
+        p3 = [node.coordinate.x1, node.coordinate.y1];
+        p4 = [node.coordinate.x3, node.coordinate.y3];
 
         let increment;
-        increment=Math.max(Math.abs(p1[1]),Math.abs(p3[1]));
+        increment = Math.max(Math.abs(p1[1]), Math.abs(p3[1]));
 
         return [
-                [p1[0],p1[1]+increment],
-                [p2[0],p2[1]+increment],
-                [p3[0],p3[1]+increment],
-                [p4[0],p4[1]+increment]
-               ]
+            [p1[0], p1[1] + increment],
+            [p2[0], p2[1] + increment],
+            [p3[0], p3[1] + increment],
+            [p4[0], p4[1] + increment]
+        ];
 
     }
 
     //判断节点的子节点是否覆盖,算法参考http://www.cnblogs.com/avril/archive/2013/04/01/2993875.html
-    overlap(node){
-        let points,m,n;
+    overlap(node) {
+        let points, m, n;
 
         //节点收起就不会重合
-        if(node.data.expand===false||this.data.expand===false){
-            return [false,0,0]
+        if (node.data.expand === false || this.data.expand === false) {
+            return [false, 0, 0];
         }
 
-        points=this.translationY(node);
+        points = this.translationY(node);
 
-        m=[Math.max(points[0][0],points[2][0]),Math.max(points[0][1],points[2][1])];
-        n=[Math.min(points[1][0],points[3][0]),Math.min(points[1][1],points[3][1])];
+        m = [Math.max(points[0][0], points[2][0]), Math.max(points[0][1], points[2][1])];
+        n = [Math.min(points[1][0], points[3][0]), Math.min(points[1][1], points[3][1])];
 
 
-        if((m[0]<n[0])&&(m[1]<n[1])){
-            return [true,Math.abs(n[0]-m[0]),n[1]-m[1]];
-        }else{
-            return [false,0,0]
+        if ((m[0] < n[0]) && (m[1] < n[1])) {
+            return [true, Math.abs(n[0] - m[0]), n[1] - m[1]];
+        } else {
+            return [false, 0, 0];
         }
     }
 
     //获取第一个子节点
-    get firstChild(){
-        for(let i,iEnd=this.children.length;i<iEnd;i++){
-            if (this.children[i].isFirst()){
-                return this.children[i]; 
+    get firstChild() {
+        for (let i, iEnd = this.children.length; i < iEnd; i++) {
+            if (this.children[i].isFirst()) {
+                return this.children[i];
             }
         }
     }
 
     //共同的父节点
-    commonParent(node){
+    commonParent(node) {
         let p1 = node;
         while (p1) {
-            let p2=this;
-            while(p2){
-                if(p2.data.node_id==p1.data.node_id){
+            let p2 = this;
+            while (p2) {
+                if (p2.data.node_id === p1.data.node_id) {
                     return p2;
                 }
-                p2=p2.parent;
+                p2 = p2.parent;
             }
             p1 = p1.parent;
         }
     }
 
     //获取最后一个子节点
-    get lastChild(){
-        for(let i,iEnd=this.children.length;i<iEnd;i++){
-            if (this.children[i].isLast()){
-                return this.children[i]; 
+    get lastChild() {
+        for (let i, iEnd = this.children.length; i < iEnd; i++) {
+            if (this.children[i].isLast()) {
+                return this.children[i];
             }
         }
-    }    
+    }
 
-    get coordinate(){
-        let x1,x2,x3,x4,y1,y2,y3,y4;
-        x4=x1=this.point.x-25;
-        x3=x2=this.point.x+this.shape.width;
-        y2=y1=this.point.y;
-        y4=y3=this.point.y+this.shape.height+10;
-        
-        return {x1,x2,x3,x4,y1,y2,y3,y4};
+    get coordinate() {
+        let x1, x2, x3, x4, y1, y2, y3, y4;
+        x4 = x1 = this.point.x - 25;
+        x3 = x2 = this.point.x + this.shape.width;
+        y2 = y1 = this.point.y;
+        y4 = y3 = this.point.y + this.shape.height + 10;
+
+        return { x1, x2, x3, x4, y1, y2, y3, y4 };
     }
 
     getData(key) {
@@ -122,7 +119,7 @@ class Node {
     }
 
     setData(key, value) {
-        if (typeof key == 'object') {
+        if (Object.prototype.toString.call(key) === '[object Object]') {
             let data = key;
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
@@ -149,8 +146,11 @@ class Node {
         return level;
     }
 
-    get serializeContent(){
-        return JSON.parse(this.data.content);
+    get serializeContent() {
+        if (Object.prototype.toString.call(this.data.content) === '[object String]') {
+            return JSON.parse(this.data.content);
+        }
+        return this.data.content;
     }
 
     get style() {
@@ -211,7 +211,9 @@ class Node {
      */
     preTraverse(fn, excludeThis) {
         let children = this.getChildren();
-        if (!excludeThis) fn(this);
+        if (!excludeThis) {
+            fn(this);
+        }
         for (let i = 0; i < children.length; i++) {
             children[i].preTraverse(fn);
         }
@@ -226,22 +228,24 @@ class Node {
         for (let i = 0; i < children.length; i++) {
             children[i].postTraverse(fn);
         }
-        if (!excludeThis) fn(this);
+        if (!excludeThis) {
+            fn(this);
+        }
     }
 
     traverse(fn, excludeThis) {
         return this.preTraverse(fn, excludeThis);
     }
 
-    get prev(){
+    get prev() {
 
-        if(this.index===0||this.isRoot()){
+        if (this.index === 0 || this.isRoot()) {
             return null;
         }
 
-        for(let i=0,iEnd=this.parent.children.length;i<iEnd;i++){
+        for (let i = 0, iEnd = this.parent.children.length; i < iEnd; i++) {
 
-            if((this.parent.children[i].index-1)==this.index){
+            if ((this.parent.children[i].index - 1) === this.index) {
                 return this.parent.children[i];
             }
         }
@@ -252,9 +256,6 @@ class Node {
         if (index === undefined) {
             index = this.children.length;
         }
-        // if (node.parent) {
-        //     node.parent.removeChild(node);
-        // }
         node.parent = this;
         node.root = this.root;
         node.index = index;

@@ -1,15 +1,15 @@
-import config from '../config'
+import config from '../config';
 
-class Options{
+class Options {
 
-    constructor(){
-        this._options={}
+    constructor() {
+        this._options = {};
 
         this.set(config);
     }
 
-    set (key,value){
-        if (typeof key == 'object') {
+    set(key, value) {
+        if (Object.prototype.toString.call(key) === '[object Object]') {
             var data = key;
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
@@ -22,13 +22,13 @@ class Options{
         return this;
     }
 
-    get (key){
+    get(key) {
         return key ? this._options[key] : this._options;
     }
 
 }
 
-const options=new Options();
+const options = new Options();
 
 
 export default options;

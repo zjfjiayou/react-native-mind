@@ -1,14 +1,13 @@
 import {
     NativeModules
-} from 'react-native'
+} from 'react-native';
 import {
-    emitter,
     ClearBr
-} from './utils'
-import Node from './node'
-import nodeStyle from '../style/node.style'
-import command from './command'
-import options from './options'
+} from './utils';
+import Node from './node';
+import nodeStyle from '../style/node.style';
+import command from './command';
+import options from './options';
 
 
 //获取文字宽度
@@ -30,12 +29,12 @@ class NodeTree {
         //计算节点大小和位置
         this.calcPosition();
 
-        this.chooseLayout=this.chooseLayout.bind(this);
+        this.chooseLayout = this.chooseLayout.bind(this);
 
         this.chooseLayout(options.get('layout'));
     }
 
-    chooseLayout(mode){
+    chooseLayout(mode) {
         this.layout = algorithm[mode];
     }
 
@@ -51,9 +50,9 @@ class NodeTree {
         return nodes;
     }
 
-    initAllNode(){
-        this.allNode.forEach(node=>{
-            node.init()
+    initAllNode() {
+        this.allNode.forEach(node => {
+            node.init();
         });
     }
 
@@ -82,7 +81,7 @@ class NodeTree {
     }
 
     appendNode(node, parent) {
-        if (parent) parent.insertChild(node);
+        if (parent) {parent.insertChild(node);}
         return this;
     }
 
@@ -91,7 +90,7 @@ class NodeTree {
             let node = this.allNode[i];
             for (let j = 0; j < iEnd; j++) {
                 let node1 = this.allNode[j];
-                if (i == j) break;
+                if (i === j) {break;}
 
                 if (node.overlap(node1)[0]) {
                     return true;
@@ -113,12 +112,12 @@ class NodeTree {
         this.allNode.forEach(node => {
             let p = new Promise((resolve, reject) => {
 
-                if (node.data.title == '') {
+                if (node.data.title === '') {
                     node.data.title = 'new node';
                 }
 
                 //去除空格
-                node.data.title=ClearBr(node.data.title);
+                node.data.title = ClearBr(node.data.title);
 
                 testLength.processString(node.data.title, {
                     font: 'Heiti SC',
@@ -141,8 +140,8 @@ class NodeTree {
                 node.data.fileNameList = [];
                 if (node.data.content && node.serializeContent.length) {
                     //去除空格
-                    node.serializeContent[0].file_name=ClearBr(node.serializeContent[0].file_name);   
-                    let p = new Promise((resolve, reject) => {
+                    node.serializeContent[0].file_name = ClearBr(node.serializeContent[0].file_name);
+                    let p1 = new Promise((resolve, reject) => {
                         splitText.processString(node.serializeContent[0].file_name, {
                             font: 'Heiti SC',
                             fontSize: node.style.title.fontSize
@@ -150,11 +149,11 @@ class NodeTree {
                                 width: node.style.fileName.width,
                                 height: 50
                             }, (error, textList) => {
-                                node.data.fileNameList = textList
+                                node.data.fileNameList = textList;
                                 resolve();
                             });
                     });
-                    promiseList.push(p);
+                    promiseList.push(p1);
                 }
             }
 
@@ -163,8 +162,8 @@ class NodeTree {
                 node.data.contentList = [];
                 if (node.data.content && node.data.content.length) {
                     //去除空格
-                    node.data.content=ClearBr(node.data.content);                         
-                    let p = new Promise((resolve, reject) => {
+                    node.data.content = ClearBr(node.data.content);
+                    let p2 = new Promise((resolve, reject) => {
                         splitText.processString(node.data.content, {
                             font: 'Heiti SC',
                             fontSize: node.style.text.fontSize
@@ -173,12 +172,12 @@ class NodeTree {
                                 height: 50
                             }, (error, textList) => {
                                 node.data.contentList = textList.filter((item) => {
-                                    return item != ''
+                                    return item !== '';
                                 });
                                 resolve();
                             });
                     });
-                    promiseList.push(p);
+                    promiseList.push(p2);
                 }
             }
         });
@@ -205,12 +204,12 @@ class NodeTree {
             });
 
             //强制节点刷新
-            this.allNode.forEach(node=>{
-                node._chenged=true;
+            this.allNode.forEach(node => {
+                node._chenged = true;
             });
 
             this.layout.init.bind(this)();
-            command.exec('layout',this.root.data.node_id);
+            command.exec('layout', this.root.data.node_id);
         });
     }
 }

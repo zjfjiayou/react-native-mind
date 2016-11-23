@@ -1,15 +1,14 @@
 import React, {
-    Component,
-    PropTypes
-} from 'react'
+    Component
+} from 'react';
 
 import {
     Text,
     G,
     Rect
-} from 'react-native-svg'
+} from 'react-native-svg';
 
-import nodeStyle from '../style/node.style'
+import nodeStyle from '../style/node.style';
 
 class Title extends Component {
     constructor(props) {
@@ -17,7 +16,7 @@ class Title extends Component {
     }
 
     render() {
-        let {nodeData}=this.props;
+        let {nodeData} = this.props;
         return (
             <G>
                <Rect

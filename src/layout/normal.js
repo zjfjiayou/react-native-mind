@@ -1,5 +1,5 @@
-import { register } from '../core/nodeTree'
-import nodeStyle from '../style/node.style'
+import { register } from '../core/nodeTree';
+import nodeStyle from '../style/node.style';
 
 const normal = {
 
@@ -9,12 +9,12 @@ const normal = {
         this.root.postTraverse((node) => {
 
             node.area.width = node.shape.width;
-            
+
             if (node.isRoot()) {
-                return
+                return;
             }
 
-            if(node.data.expand===false){
+            if (node.data.expand === false){
                 node.parent.area.height = 0;
             }
 
@@ -32,13 +32,13 @@ const normal = {
         });
 
         //计算节点Y轴偏移位置
-        this.allNode.forEach((node, index) => {      
+        this.allNode.forEach((node, index) => {
 
             if (node.isRoot()) {
-                return
+                return;
             }
 
-            node.point.y = -(node.parent.area.height - node.parent.shape.height) / 2 + (node.area.height - node.shape.height) / 2 + node.parent.point.y + node.parent.point.childOffsetY
+            node.point.y = -(node.parent.area.height - node.parent.shape.height) / 2 + (node.area.height - node.shape.height) / 2 + node.parent.point.y + node.parent.point.childOffsetY;
 
             //记录偏移
             if (node.isLeaf()) {
@@ -50,6 +50,6 @@ const normal = {
             node.point.offsetX = node.point.x;
         });
     }
-}
+};
 
 register('normal', normal);

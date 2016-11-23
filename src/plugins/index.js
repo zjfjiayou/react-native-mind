@@ -1,3 +1,3 @@
-import Navigation from './navigation'
+import Navigation from './navigation';
 
-module.exports.Navigation=Navigation;
+module.exports.Navigation = Navigation;

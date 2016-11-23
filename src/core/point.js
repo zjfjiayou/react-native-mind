@@ -47,7 +47,6 @@ class Point {
     get offsetY() {
         return this._offsetY;
     }
-    
 }
 
 

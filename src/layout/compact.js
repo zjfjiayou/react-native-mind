@@ -1,42 +1,42 @@
-import { register } from '../core/nodeTree'
-import nodeStyle from '../style/node.style'
+import { register } from '../core/nodeTree';
+import nodeStyle from '../style/node.style';
 
 const compact = {
 
     init: function () {
 
-        function calcCoordinate(){
+        function calcCoordinate() {
             //计算节点Y轴偏移位置
-            this.allNode.forEach((node,index)=>{
-                node.point.childOffsetY=0;
-                node.point.offsetX=0;
-                node.point.x=0;
-                node.point.y=0;
+            this.allNode.forEach((node, index) => {
+                node.point.childOffsetY = 0;
+                node.point.offsetX = 0;
+                node.point.x = 0;
+                node.point.y = 0;
 
-                if(node.isRoot()){
-                    node.area.height=0;
-                    node.children.forEach((item)=>{
-                        node.area.height+=item.shape.height+item.blank.height;
+                if (node.isRoot()) {
+                    node.area.height = 0;
+                    node.children.forEach((item) => {
+                        node.area.height += item.shape.height + item.blank.height;
                     });
-                    return
-                }          
+                    return;
+                }
 
-                node._index=index;
+                node._index = index;
 
-                node.point.y=-(node.parent.area.height-node.parent.shape.height)/2+node.blank.height+node.parent.point.y+node.parent.point.childOffsetY-(node.parent.children.length-1)*5;
+                node.point.y = -(node.parent.area.height - node.parent.shape.height) / 2 + node.blank.height + node.parent.point.y + node.parent.point.childOffsetY - (node.parent.children.length - 1) * 5;
 
                 //记录偏移
-                node.parent.point.childOffsetY+=node.shape.height+node.blank.height;
-                node.point.x=node.parent.point.offsetX+node.parent.shape.width+nodeStyle.blankLeft;;
-                node.point.offsetX=node.point.x;
-            });  
+                node.parent.point.childOffsetY += node.shape.height + node.blank.height;
+                node.point.x = node.parent.point.offsetX + node.parent.shape.width + nodeStyle.blankLeft;
+                node.point.offsetX = node.point.x;
+            });
         }
 
         this.root.postTraverse((node) => {
             node.area.width = node.shape.width;
 
             if (node.isRoot()) {
-                return
+                return;
             }
 
             if (node.isLeaf()) {
@@ -54,18 +54,18 @@ const compact = {
                 let node = this.allNode[i];
                 for (let j = 0; j < iEnd; j++) {
                     let node1 = this.allNode[j];
-                    if (i == j) break;
+                    if (i === j) {break;}
 
-                    let data = node.overlap(node1)
+                    let data = node.overlap(node1);
 
                     if (data[0]) {
                         p = true;
                         let temp;
                         if (node._index > node1._index) {
-                            temp = node
+                            temp = node;
                         } else {
                             temp = node1;
-                        };
+                        }
 
                         //找到通用的父节点
                         let cp = node.commonParent(node1);
@@ -73,7 +73,7 @@ const compact = {
 
                         //找到需要改变的节点
                         while (temp) {
-                            if (temp.parent.data.node_id == cp.data.node_id) {
+                            if (temp.parent.data.node_id === cp.data.node_id) {
                                 break;
                             }
                             temp = temp.parent;
@@ -85,11 +85,11 @@ const compact = {
                         break;
                     }
                 }
-                if (p) break;
+                if (p) {break;}
             }
 
         }
     }
-}
+};
 
 register('compact', compact);
